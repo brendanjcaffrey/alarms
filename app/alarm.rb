@@ -1,4 +1,5 @@
 class Alarm
+  include Comparable
   attr_reader :date
   @@date_formatter = NSDateFormatter.alloc.init
   @@date_formatter.dateFormat = 'yyyyMMddHHmm'
@@ -25,5 +26,9 @@ class Alarm
 
   def serialize
     @@date_formatter.stringFromDate(@date)
+  end
+
+  def <=>(other)
+    self.date <=> other.date
   end
 end

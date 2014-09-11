@@ -3,8 +3,8 @@ describe AlarmCollection do
     AlarmCollection.new([]).alarms.should == []
   end
 
-  it 'should unserialize a list of alarms and skip blank lines' do
-    alarms = "210010020545\n\n210011030646\n"
+  it 'should unserialize a list of alarms, skip blank lines and sort ascending' do
+    alarms = "210011030646\n\n210010020545\n"
     dates = [NSDate.dateWithNaturalLanguageString('October 2nd, 2100 5:45am'),
              NSDate.dateWithNaturalLanguageString('November 3rd, 2100 6:46am')]
     collection = AlarmCollection.unserialize(alarms)
@@ -20,5 +20,22 @@ describe AlarmCollection do
     alarms = dates.map { |date| Alarm.new(date) }
 
     AlarmCollection.new(alarms).serialize.should == string
+  end
+
+  it 'should insert alarms in sorted order' do
+    alarm0 = Alarm.new(NSDate.date.dateByAddingTimeInterval(15))
+    alarm1 = Alarm.new(NSDate.date.dateByAddingTimeInterval(30))
+    alarm2 = Alarm.new(NSDate.date.dateByAddingTimeInterval(45))
+    collection = AlarmCollection.new([alarm1])
+
+    collection.add_alarm(alarm2)
+    collection.alarms[1].should == alarm2
+
+    collection.add_alarm(alarm0)
+    collection.alarms[0].should == alarm0
+  end
+
+  it 'should throw an exception if you try to insert something other than an Alarm' do
+    lambda { AlarmCollection.new([]).add_alarm('abcd') }.should.raise(Exception)
   end
 end

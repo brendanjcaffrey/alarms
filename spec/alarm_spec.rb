@@ -28,4 +28,13 @@ describe Alarm do
     alarm = Alarm.new(NSDate.dateWithNaturalLanguageString(@nl_string))
     alarm.serialize.should == @serialize_string
   end
+
+  it 'should sort in ascending order' do
+    alarm_past = Alarm.new(NSDate.date.dateByAddingTimeInterval(30))
+    alarm_future = Alarm.new(NSDate.date.dateByAddingTimeInterval(60))
+
+    alarm_past.<=>(alarm_future).should == -1
+    alarm_past.<=>(alarm_past).should == 0
+    alarm_future.<=>(alarm_past).should == 1
+  end
 end
