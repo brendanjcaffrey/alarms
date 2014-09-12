@@ -37,4 +37,9 @@ describe Alarm do
     alarm_past.<=>(alarm_past).should == 0
     alarm_future.<=>(alarm_past).should == 1
   end
+
+  it 'should return Today or Tomorrow instead of the date if it is today or tomorrow' do
+    Alarm.new(NSDate.date.dateByAddingTimeInterval(1)).to_menu_date.should == 'Today'
+    Alarm.new(NSDate.date.dateByAddingTimeInterval(60*60*24)).to_menu_date.should == 'Tomorrow'
+  end
 end
