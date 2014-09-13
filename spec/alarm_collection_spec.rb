@@ -13,6 +13,12 @@ describe AlarmCollection do
     collection.alarms[1].date.should == dates[1]
   end
 
+  it 'should ignore past alarms when unserializing' do
+    alarm = '200011030646'
+    collection = AlarmCollection.unserialize(alarm)
+    collection.alarms.count.should == 0
+  end
+
   it 'should serialize an alarm list' do
     string = "210010020545\n210011030646"
     dates = [NSDate.dateWithNaturalLanguageString('October 2nd, 2100 5:45am'),

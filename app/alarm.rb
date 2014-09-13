@@ -16,11 +16,6 @@ class Alarm
       raise Exception.new('Invalid date in Alarm.initialize, must be an instance of NSDate')
     end
 
-    result = NSDate.date.compare(date)
-    if result != NSOrderedAscending
-      raise Exception.new('Invalid date in Alarm.initialize, must be in the future')
-    end
-
     @date = date
   end
 
@@ -28,6 +23,12 @@ class Alarm
     date = @@serialization_formatter.dateFromString(date_string)
 
     return nil unless date
+
+    result = NSDate.date.compare(date)
+    if result != NSOrderedAscending
+      return nil
+    end
+
     Alarm.new(date)
   end
 

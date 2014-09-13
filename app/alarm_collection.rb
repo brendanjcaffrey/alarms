@@ -7,7 +7,7 @@ class AlarmCollection
 
   def self.unserialize(string)
     alarms = string.split("\n").reject { |str| str.empty? }
-      .map { |str| Alarm.unserialize(str) }
+      .map { |str| Alarm.unserialize(str) }.reject { |alarm| alarm.nil? }
     AlarmCollection.new(alarms.sort)
   end
 

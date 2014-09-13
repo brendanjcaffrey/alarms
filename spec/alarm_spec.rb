@@ -9,11 +9,6 @@ describe Alarm do
     lambda { Alarm.new(invalid_date) }.should.raise(Exception)
   end
 
-  it 'should throw an exception if the date is in the past on initialization' do
-    past_date = NSDate.date.dateByAddingTimeInterval(-600)
-    lambda { Alarm.new(past_date) }.should.raise(Exception)
-  end
-
   it 'should unserialize an alarm' do
     alarm = Alarm.unserialize(@serialize_string)
     alarm.date.should == NSDate.dateWithNaturalLanguageString(@nl_string)
@@ -21,6 +16,11 @@ describe Alarm do
 
   it 'should return nil if it can\'t unserialize an alarm' do
     alarm = Alarm.unserialize('blah')
+    alarm.should == nil
+  end
+
+  it 'should return nil if it can\'t unserialize an alarm because it\'s in the past' do
+    alarm = Alarm.unserialize('200010101010')
     alarm.should == nil
   end
 
