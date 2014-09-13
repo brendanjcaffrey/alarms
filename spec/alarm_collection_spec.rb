@@ -49,4 +49,13 @@ describe AlarmCollection do
     collection.alarms[0].should == alarm0
     collection.alarms[1].should == alarm2
   end
+
+  it 'should update alarms' do
+    alarm0 = Alarm.new(NSDate.date.dateByAddingTimeInterval(15))
+    new_date = NSDate.date.dateByAddingTimeInterval(30)
+
+    collection = AlarmCollection.new([alarm0])
+    collection.update_alarm(alarm0, new_date)
+    collection.alarms[0].date.should == new_date
+  end
 end

@@ -1,6 +1,7 @@
 class AlarmInfoController < NSWindowController
-  def init_with_alarm(alarm)
+  def init_with_alarm(alarm, delegate:delegate)
     @alarm = alarm
+    @delegate = WeakRef.new(delegate)
     init
   end
 
@@ -24,6 +25,12 @@ class AlarmInfoController < NSWindowController
   end
 
   def submit(sender)
+    if @alarm == nil
+      @delegate.alarm_added(combine_date_and_time)
+    else
+      @delegate.alarm_edited(@alarm, combine_date_and_time)
+    end
+
     close
   end
 
@@ -32,6 +39,16 @@ class AlarmInfoController < NSWindowController
   end
 
   def delete(sender)
+    @delegate.alarm_deleted(@alarm)
     close
+  end
+
+  private
+
+  def combine_date_and_time
+    date = Time.at @layout.date.dateValue
+    time = Time.at @layout.time.dateValue
+
+    Time.local(date.year, date.mon, date.day, time.hour, time.min)
   end
 end
