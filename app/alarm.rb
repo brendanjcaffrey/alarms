@@ -54,4 +54,7 @@ class Alarm
     @@menu_time_formatter.stringFromDate(@date)
   end
 
+  def to_menu_string
+    to_menu_date + ' at ' + to_menu_time
+  end
 end

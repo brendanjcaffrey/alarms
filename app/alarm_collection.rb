@@ -23,4 +23,8 @@ class AlarmCollection
     @alarms << alarm
     @alarms.sort!
   end
+
+  def remove_alarm(alarm_to_delete)
+    @alarms.reject! { |alarm| alarm == alarm_to_delete }
+  end
 end
