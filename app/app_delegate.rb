@@ -28,14 +28,15 @@ class AppDelegate
   end
 
   def add_alarm
-    alert = NSAlert.alloc.init
-    alert.setMessageText 'Add alarm action triggered from status bar menu'
-    alert.addButtonWithTitle 'OK'
-    alert.runModal
+    @window = AlarmInfoController.alloc.init
+    @window.showWindow(self)
+    @window.window.orderFrontRegardless
   end
 
-  def alarm(menu_item)
-    puts 'alarm tapped in menu: ' + menu_item.representedObject.inspect
+  def edit_alarm(menu_item)
+    @window = AlarmInfoController.alloc.init_with_alarm(menu_item.representedObject)
+    @window.showWindow(self)
+    @window.window.orderFrontRegardless
   end
 
   private
@@ -45,15 +46,12 @@ class AppDelegate
   end
 
   def create_alarm_item(alarm)
-    item = NSMenuItem.alloc.initWithTitle(alarm_string(alarm), action:'alarm:', keyEquivalent:'')
+    item = NSMenuItem.alloc.initWithTitle(alarm_string(alarm), action:'edit_alarm:', keyEquivalent:'')
     item.setRepresentedObject(alarm)
     item
   end
 
   def alarm_string(alarm)
-    date = alarm.to_menu_date
-    time = alarm.to_menu_time
-
-    date + ' at ' + time
+    alarm.to_menu_date + ' at ' + alarm.to_menu_time
   end
 end

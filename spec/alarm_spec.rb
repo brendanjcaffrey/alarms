@@ -38,6 +38,11 @@ describe Alarm do
     alarm_future.<=>(alarm_past).should == 1
   end
 
+  it 'should sort even if it\'s compared to something other than an NSDate' do
+    alarm_past = Alarm.new(NSDate.date.dateByAddingTimeInterval(30))
+    alarm_past.<=>(nil).should != 0
+  end
+
   it 'should return Today or Tomorrow instead of the date if it is today or tomorrow' do
     Alarm.new(NSDate.date.dateByAddingTimeInterval(1)).to_menu_date.should == 'Today'
     Alarm.new(NSDate.date.dateByAddingTimeInterval(60*60*24)).to_menu_date.should == 'Tomorrow'

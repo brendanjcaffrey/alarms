@@ -36,6 +36,7 @@ class Alarm
   end
 
   def <=>(other)
+    return 1 unless other.is_a?(Alarm)
     self.date <=> other.date
   end
 
