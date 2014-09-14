@@ -11,15 +11,11 @@ class AppDelegate
   end
 
   def add_alarm
-    @window = AlarmInfoController.alloc.init_with_alarm(nil, delegate:self)
-    @window.showWindow(self)
-    @window.window.orderFrontRegardless
+    show_alarm(nil)
   end
 
   def edit_alarm(menu_item)
-    @window = AlarmInfoController.alloc.init_with_alarm(menu_item.representedObject, delegate:self)
-    @window.showWindow(self)
-    @window.window.orderFrontRegardless
+    show_alarm(menu_item.representedObject)
   end
 
   def alarm_added(date)
@@ -33,11 +29,17 @@ class AppDelegate
   end
 
   def alarm_deleted(alarm)
-    @collection.delete_alarm(alarm)
+    @collection.remove_alarm(alarm)
     alarms_changed
   end
 
   private
+
+  def show_alarm(alarm)
+    @window = AlarmInfoController.alloc.init_with_alarm(alarm, delegate:self)
+    @window.showWindow(self)
+    @window.window.orderFrontRegardless
+  end
 
   def build_menu
     @status_menu = NSMenu.new
