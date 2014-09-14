@@ -14,11 +14,11 @@ class AppDelegate
   end
 
   def add_alarm
-    show_alarm(nil)
+    show_alarm_window(nil)
   end
 
   def edit_alarm(menu_item)
-    show_alarm(menu_item.representedObject)
+    show_alarm_window(menu_item.representedObject)
   end
 
   def alarm_added(date)
@@ -38,10 +38,12 @@ class AppDelegate
 
   private
 
-  def show_alarm(alarm)
+  def show_alarm_window(alarm)
     @window = AlarmInfoController.alloc.init_with_alarm(alarm, delegate:self)
     @window.showWindow(self)
-    @window.window.orderFrontRegardless
+    @window.window.makeKeyAndOrderFront(self)
+    @window.window.makeMainWindow
+    @window.window.center
   end
 
   def build_menu
