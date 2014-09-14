@@ -1,4 +1,5 @@
 class AlarmCollection
+  @@snooze_interval = 60.0*5.0
   attr_reader :alarms
 
   def initialize(alarms)
@@ -31,5 +32,9 @@ class AlarmCollection
   def update_alarm(alarm, new_date)
     remove_alarm(alarm)
     add_alarm(Alarm.new(new_date))
+  end
+
+  def snooze_alarm(alarm)
+    update_alarm(alarm, alarm.date.dateByAddingTimeInterval(@@snooze_interval))
   end
 end

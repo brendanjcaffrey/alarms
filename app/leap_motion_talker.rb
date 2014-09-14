@@ -1,9 +1,7 @@
 class LeapMotionTalker
-  def set_delegate(delegate)
+  def start_talking(delegate)
     @delegate = WeakRef.new(delegate)
-  end
 
-  def start_talking
     url = NSURL.URLWithString('ws://127.0.0.1:6437')
     @socket = SRWebSocket.alloc.initWithURLRequest(NSURLRequest.requestWithURL(url))
     @socket.delegate = self
@@ -12,6 +10,7 @@ class LeapMotionTalker
 
   def stop_talking
     @socket.close
+    @delegate = nil
   end
 
   def webSocketDidOpen(webSocket)
@@ -20,6 +19,8 @@ class LeapMotionTalker
   end
 
   def webSocket(webSocket, didReceiveMessage:message)
+    return unless @delegate
+
     error_ptr = Pointer.new(:object)
     parsed = message.description.objectFromJSONStringWithParseOptions(JKParseOptionValidFlags, error:error_ptr)
 

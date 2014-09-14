@@ -10,17 +10,17 @@ class AlarmInfoController < NSWindowController
       @layout = AlarmInfoLayout.alloc.init_with_alarm(@alarm)
       self.window = @layout.window
 
-      @submit = @layout.submit
-      @submit.setTarget(self)
-      @submit.setAction('submit:')
+      submit = @layout.submit
+      submit.setTarget(self)
+      submit.setAction('submit:')
 
-      @cancel = @layout.cancel
-      @cancel.setTarget(self)
-      @cancel.setAction('cancel:')
+      cancel = @layout.cancel
+      cancel.setTarget(self)
+      cancel.setAction('cancel:')
 
-      @delete = @layout.delete
-      @delete.setTarget(self)
-      @delete.setAction('delete:')
+      delete = @layout.delete
+      delete.setTarget(self)
+      delete.setAction('delete:')
     end
   end
 

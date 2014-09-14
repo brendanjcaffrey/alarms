@@ -11,8 +11,7 @@ describe LeapMotionTalker do
 
     delegate = mock(:did_gesture)
     talker = LeapMotionTalker.new
-    talker.set_delegate(delegate)
-    talker.start_talking
+    talker.start_talking(delegate)
 
     talker.webSocketDidOpen(socket_stub)
     json = '{"gestures":"hi"}'

@@ -64,4 +64,14 @@ describe AlarmCollection do
     collection.update_alarm(alarm0, new_date)
     collection.alarms[0].date.should == new_date
   end
+
+  it 'should snooze alarms' do
+    alarm = Alarm.new(NSDate.date.dateByAddingTimeInterval(15))
+    interval = AlarmCollection.class_variable_get(:@@snooze_interval)
+    new_date = alarm.date.dateByAddingTimeInterval(interval)
+
+    collection = AlarmCollection.new([alarm])
+    collection.snooze_alarm(alarm)
+    collection.alarms[0].date.should == new_date
+  end
 end

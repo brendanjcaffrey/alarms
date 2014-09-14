@@ -12,7 +12,7 @@ class AlarmInfoLayout < MotionKit::WindowLayout
   end
 
   def layout
-    frame [[100, 100], [232, 115]]
+    frame [[0, 0], [232, 115]]
     styleMask NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask
 
     @date = add NSDatePicker, :date

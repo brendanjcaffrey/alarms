@@ -3,8 +3,8 @@ describe AlarmSounder do
     @delegate_mock = Object.new
     @player_mock = Object.new
     @talker_mock = Object.new
-    @talker_mock.stub!(:set_delegate) { |delegate| nil }
-    @sounder = AlarmSounder.new(@delegate_mock, @player_mock, @talker_mock)
+    @shower_mock = Object.new
+    @sounder = AlarmSounder.new(@delegate_mock, @player_mock, @talker_mock, @shower_mock)
   end
 
   it 'should schedule a timer with the number of seconds to the alarm date' do
@@ -30,17 +30,32 @@ describe AlarmSounder do
 
   it 'should start leap motion tracking and start playing audio on timer fire' do
     @player_mock.mock!(:play)
-    @talker_mock.mock!(:start_talking)
+    @talker_mock.mock!(:start_talking) { |del| del.should == @sounder }
+    @shower_mock.mock!(:show_control_panel) { |del| del.should == @sounder }
     @sounder.fired(nil)
   end
 
-  it 'should stop leap motion tracking, stop playing audio and delete the alarm on gesture' do
+  before do
     @player_mock.mock!(:stop)
     @talker_mock.mock!(:stop_talking)
-    @delegate_mock.mock!(:alarm_deleted) { |alarm| alarm.should == @alarm }
+    @shower_mock.mock!(:hide_control_panel)
 
     @alarm = Alarm.new(NSDate.date.dateByAddingTimeInterval(5))
     @sounder.instance_variable_set(:@alarm, @alarm)
+  end
+
+  it 'clean up and delegate on gesture' do
+    @delegate_mock.mock!(:alarm_deleted) { |alarm| alarm.should == @alarm }
     @sounder.did_gesture
+  end
+
+  it 'clean up and delegate on stop' do
+    @delegate_mock.mock!(:alarm_deleted) { |alarm| alarm.should == @alarm }
+    @sounder.stop
+  end
+
+  it 'clean up and delegate on snooze' do
+    @delegate_mock.mock!(:alarm_snoozed) { |alarm| alarm.should == @alarm }
+    @sounder.snooze
   end
 end

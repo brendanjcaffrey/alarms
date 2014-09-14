@@ -6,7 +6,7 @@ class AppDelegate
     defaults = NSUserDefaults.standardUserDefaults
     defaults.setObject('', forKey:@@key) if defaults.objectForKey(@@key) == nil
 
-    @sounder = AlarmSounder.new(self, AudioPlayer.new, LeapMotionTalker.new)
+    @sounder = AlarmSounder.new(self, AudioPlayer.new, LeapMotionTalker.new, ControlPanelShower.new)
     @collection = AlarmCollection.unserialize(defaults.objectForKey('alarms'))
 
     build_menu
@@ -33,6 +33,11 @@ class AppDelegate
 
   def alarm_deleted(alarm)
     @collection.remove_alarm(alarm)
+    alarms_changed
+  end
+
+  def alarm_snoozed(alarm)
+    @collection.snooze_alarm(alarm)
     alarms_changed
   end
 
