@@ -12,6 +12,10 @@ Motion::Project::App.setup do |app|
   app.name = 'alarm'
   app.info_plist['LSUIElement'] = true
   app.frameworks << 'AVFoundation'
+  app.frameworks << 'CoreAudio'
+
+  app.vendor_project('vendor/switchaudio', :static)
+  app.vendor_project('vendor/switchvolume', :static)
 
   app.pods do
     pod 'SocketRocket'

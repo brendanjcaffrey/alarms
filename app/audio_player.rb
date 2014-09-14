@@ -1,4 +1,7 @@
 class AudioPlayer
+  @@default_output = 'Built-in Output'
+  @@max_volume = 1.0
+
   def initialize
     error_ptr = Pointer.new(:object)
     alarm_url = NSURL.fileURLWithPath(NSBundle.mainBundle.pathForResource('alarm', ofType:'m4a'))
@@ -13,10 +16,18 @@ class AudioPlayer
   end
 
   def play
+    @old_output = getCurrentOutputDeviceName
+    setOutputDeviceByName(@@default_output)
+
+    @old_volume = getOutputVolume
+    setOutputVolume(@@max_volume)
+
     @player.play
   end
 
   def stop
+    setOutputVolume(@old_volume)
+    setOutputDeviceByName(@old_output)
     @player.stop
   end
 end
