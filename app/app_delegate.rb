@@ -6,8 +6,11 @@ class AppDelegate
     defaults = NSUserDefaults.standardUserDefaults
     defaults.setObject('', forKey:@@key) if defaults.objectForKey(@@key) == nil
 
+    @sounder = AlarmSounder.new(self)
     @collection = AlarmCollection.unserialize(defaults.objectForKey('alarms'))
+
     build_menu
+    alarms_changed
   end
 
   def add_alarm
@@ -47,8 +50,7 @@ class AppDelegate
     @status_item = NSStatusBar.systemStatusBar.statusItemWithLength(NSVariableStatusItemLength).init
     @status_item.setMenu(@status_menu)
     @status_item.setHighlightMode(true)
-    @status_item.setTitle('Alarms')
-    fill_menu
+    @status_item.setImage(NSImage.imageNamed('alarm'))
   end
 
   def fill_menu
@@ -63,6 +65,7 @@ class AppDelegate
   end
 
   def alarms_changed
+    @sounder.set_next_alarm(@collection.alarms.first) unless @collection.alarms.empty?
     NSUserDefaults.standardUserDefaults.setObject(@collection.serialize, forKey:@@key)
     @status_menu.removeAllItems
     fill_menu
