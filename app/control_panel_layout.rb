@@ -13,6 +13,7 @@ class ControlPanelLayout < MotionKit::WindowLayout
   def layout
     frame [[0, 0], [@@width, @@height]]
     styleMask NSBorderlessWindowMask 
+    level NSPopUpMenuWindowLevel
 
     @time = add NSTextField, :time
     @snooze = add NSButton, :snooze
@@ -36,7 +37,6 @@ class ControlPanelLayout < MotionKit::WindowLayout
 
   def snooze_style
     title 'Snooze'
-    key_equivalent "\r" # return
     button_style
 
     constraints do
@@ -46,7 +46,6 @@ class ControlPanelLayout < MotionKit::WindowLayout
 
   def stop_style
     title 'Stop'
-    key_equivalent "\E" # esc
     button_style
 
     constraints do

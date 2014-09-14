@@ -45,10 +45,9 @@ class AppDelegate
 
   def show_alarm_window(alarm)
     @window = AlarmInfoController.alloc.init_with_alarm(alarm, delegate:self)
-    @window.showWindow(self)
-    @window.window.makeKeyAndOrderFront(self)
-    @window.window.makeMainWindow
     @window.window.center
+    @window.showWindow(nil)
+    NSApplication.sharedApplication.activateIgnoringOtherApps(true)
   end
 
   def build_menu

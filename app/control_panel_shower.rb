@@ -3,9 +3,9 @@ class ControlPanelShower
     hide_control_panel if @panel
 
     @panel = ControlPanelController.alloc.init_with_delegate(delegate)
-    @panel.showWindow(self)
-    @panel.window.makeKeyAndOrderFront(self)
     center_panel
+    @panel.showWindow(self)
+    NSApplication.sharedApplication.activateIgnoringOtherApps(true)
   end
 
   def hide_control_panel
