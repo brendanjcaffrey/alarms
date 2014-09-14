@@ -1,5 +1,5 @@
 class LeapMotionTalker
-  def initialize(delegate)
+  def set_delegate(delegate)
     @delegate = WeakRef.new(delegate)
   end
 

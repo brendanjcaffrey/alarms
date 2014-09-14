@@ -10,7 +10,8 @@ describe LeapMotionTalker do
     SRWebSocket.mock!(:alloc, return: initial_stub)
 
     delegate = mock(:did_gesture)
-    talker = LeapMotionTalker.new(delegate)
+    talker = LeapMotionTalker.new
+    talker.set_delegate(delegate)
     talker.start_talking
 
     talker.webSocketDidOpen(socket_stub)

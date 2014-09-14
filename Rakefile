@@ -11,6 +11,7 @@ end
 Motion::Project::App.setup do |app|
   app.name = 'alarm'
   app.info_plist['LSUIElement'] = true
+  app.frameworks << 'AVFoundation'
 
   app.pods do
     pod 'SocketRocket'
