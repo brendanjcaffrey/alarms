@@ -1,6 +1,6 @@
 class AudioPlayer
   @@default_output = 'Built-in Output'
-  @@max_volume = 0.2
+  @@max_volume = 1.0
 
   def initialize
     error_ptr = Pointer.new(:object)

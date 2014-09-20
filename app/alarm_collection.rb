@@ -16,6 +16,10 @@ class AlarmCollection
     @alarms.map { |alarm| alarm.serialize }.join("\n")
   end
 
+  def first_alarm
+    @alarms.first
+  end
+
   def add_alarm(alarm)
     unless alarm.is_a?(Alarm)
       raise Exception.new('Alarm must be instance of Alarm in AlarmCollection.add_alarm')

@@ -28,6 +28,16 @@ describe AlarmCollection do
     AlarmCollection.new(alarms).serialize.should == string
   end
 
+  it 'should return the first alarm by time' do
+    alarm0 = Alarm.new(NSDate.date.dateByAddingTimeInterval(15))
+    collection = AlarmCollection.new([alarm0])
+    collection.first_alarm.should == alarm0
+  end
+
+  it 'should return nil if there is no first alarm' do
+    AlarmCollection.new([]).first_alarm.should == nil
+  end
+
   it 'should insert alarms in sorted order' do
     alarm0 = Alarm.new(NSDate.date.dateByAddingTimeInterval(15))
     alarm1 = Alarm.new(NSDate.date.dateByAddingTimeInterval(30))

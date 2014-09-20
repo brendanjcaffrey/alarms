@@ -8,8 +8,9 @@ class AlarmSounder
 
   def set_next_alarm(alarm)
     @timer.invalidate if @timer
-
     @alarm = alarm
+    return unless alarm
+
     seconds = alarm.date.timeIntervalSinceDate(NSDate.date)
     @timer = NSTimer.scheduledTimerWithTimeInterval(seconds, target:self, selector:'fired:',
                                                     userInfo:nil, repeats:false)

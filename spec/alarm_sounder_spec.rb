@@ -28,6 +28,18 @@ describe AlarmSounder do
     @sounder.set_next_alarm(alarm2)
   end
 
+  it 'should invalidate the timer even if the nil is passed in instead of an alarm' do
+    alarm0 = Alarm.new(NSDate.date.dateByAddingTimeInterval(10))
+    timer_mock = mock(:invalidate)
+
+    NSTimer.mock!('scheduledTimerWithTimeInterval:target:selector:userInfo:repeats:') do |int, tar, sel, ui, r|
+      timer_mock
+    end
+
+    @sounder.set_next_alarm(alarm0)
+    @sounder.set_next_alarm(nil)
+  end
+
   it 'should start leap motion tracking and start playing audio on timer fire' do
     @player_mock.mock!(:play)
     @talker_mock.mock!(:start_talking) { |del| del.should == @sounder }

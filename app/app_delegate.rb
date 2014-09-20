@@ -64,15 +64,19 @@ class AppDelegate
       @status_menu.addItem create_alarm_item(alarm)
     end
 
-    @status_menu.addItem NSMenuItem.separatorItem
+    @status_menu.addItem NSMenuItem.separatorItem if @collection.first_alarm != nil
     @status_menu.addItem create_menu_item('Add Alarm...', 'add_alarm')
     @status_menu.addItem create_menu_item('About Alarms', 'orderFrontStandardAboutPanel:')
     @status_menu.addItem create_menu_item('Quit', 'terminate:')
   end
 
   def alarms_changed
-    @sounder.set_next_alarm(@collection.alarms.first) unless @collection.alarms.empty?
+    @sounder.set_next_alarm(@collection.first_alarm)
     NSUserDefaults.standardUserDefaults.setObject(@collection.serialize, forKey:@@key)
+    reset_menu
+  end
+
+  def reset_menu
     @status_menu.removeAllItems
     fill_menu
   end
