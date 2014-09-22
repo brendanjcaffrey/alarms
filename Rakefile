@@ -22,3 +22,7 @@ Motion::Project::App.setup do |app|
     pod 'JSONKit'
   end
 end
+
+task :launch do
+  system('open `find . | grep "[^spec]\.app$"`') 
+end
