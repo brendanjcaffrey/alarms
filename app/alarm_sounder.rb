@@ -26,6 +26,8 @@ class AlarmSounder
   end
 
   def did_gesture
+    return unless @silence_timer.nil?
+
     @player.silence
     @silence_timer = NSTimer.scheduledTimerWithTimeInterval(@@silence_seconds, target:self, selector:'unsilence:',
                                                             userInfo:nil, repeats:false)
