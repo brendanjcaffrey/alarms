@@ -45,6 +45,14 @@ class AudioPlayer
     setOutputDeviceByName(@old_output)
   end
 
+  def silence
+    @player.stop
+  end
+
+  def unsilence
+    @player.play
+  end
+
   private
 
   def invalidate_timer

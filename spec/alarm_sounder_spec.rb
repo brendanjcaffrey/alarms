@@ -47,6 +47,16 @@ describe AlarmSounder do
     @sounder.fired(nil)
   end
 
+  it 'silence and set alarm to unsilence on gesture, then undo on timer fire' do
+    @player_mock.mock!(:silence)
+    timer_mock = Object.new
+    NSTimer.mock!('scheduledTimerWithTimeInterval:target:selector:userInfo:repeats:') { |int, tar, sel, ui, r| timer_mock }
+    @player_mock.mock!(:unsilence)
+
+    @sounder.did_gesture
+    @sounder.unsilence(nil)
+  end
+
   before do
     @player_mock.mock!(:stop)
     @talker_mock.mock!(:stop_talking)
@@ -56,18 +66,31 @@ describe AlarmSounder do
     @sounder.instance_variable_set(:@alarm, @alarm)
   end
 
-  it 'clean up and delegate on gesture' do
-    @delegate_mock.mock!(:alarm_deleted) { |alarm| alarm.should == @alarm }
-    @sounder.did_gesture
-  end
-
   it 'clean up and delegate on stop' do
     @delegate_mock.mock!(:alarm_deleted) { |alarm| alarm.should == @alarm }
     @sounder.stop
   end
 
+  it 'should clean up the silence timer on stop' do
+    timer_mock = mock(:invalidate)
+    NSTimer.mock!('scheduledTimerWithTimeInterval:target:selector:userInfo:repeats:') { |int, tar, sel, ui, r| timer_mock }
+    @delegate_mock.mock!(:alarm_deleted) { |alarm| alarm.should == @alarm }
+
+    @sounder.did_gesture
+    @sounder.stop
+  end
+
   it 'clean up and delegate on snooze' do
     @delegate_mock.mock!(:alarm_snoozed) { |alarm| alarm.should == @alarm }
+    @sounder.snooze
+  end
+
+  it 'should clean up the silence timer on snooze' do
+    timer_mock = mock(:invalidate)
+    NSTimer.mock!('scheduledTimerWithTimeInterval:target:selector:userInfo:repeats:') { |int, tar, sel, ui, r| timer_mock }
+    @delegate_mock.mock!(:alarm_snoozed) { |alarm| alarm.should == @alarm }
+
+    @sounder.did_gesture
     @sounder.snooze
   end
 end
