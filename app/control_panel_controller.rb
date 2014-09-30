@@ -5,7 +5,7 @@ class ControlPanelController < NSWindowController
   end
 
   def init
-    @timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target:self, selector:'update_time', userInfo:nil, repeats:true)
+    @timer = NSTimer.scheduledTimerWithTimeInterval(0.25, target:self, selector:'update_time', userInfo:nil, repeats:true)
 
     super.tap do
       @layout = ControlPanelLayout.alloc.init
