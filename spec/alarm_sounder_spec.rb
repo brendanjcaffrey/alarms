@@ -75,6 +75,7 @@ describe AlarmSounder do
     timer_mock = mock(:invalidate)
     NSTimer.mock!('scheduledTimerWithTimeInterval:target:selector:userInfo:repeats:') { |int, tar, sel, ui, r| timer_mock }
     @delegate_mock.mock!(:alarm_deleted) { |alarm| alarm.should == @alarm }
+    @player_mock.mock!(:silence)
 
     @sounder.did_gesture
     @sounder.stop
@@ -89,6 +90,7 @@ describe AlarmSounder do
     timer_mock = mock(:invalidate)
     NSTimer.mock!('scheduledTimerWithTimeInterval:target:selector:userInfo:repeats:') { |int, tar, sel, ui, r| timer_mock }
     @delegate_mock.mock!(:alarm_snoozed) { |alarm| alarm.should == @alarm }
+    @player_mock.mock!(:silence)
 
     @sounder.did_gesture
     @sounder.snooze
