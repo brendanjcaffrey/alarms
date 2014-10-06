@@ -1,11 +1,12 @@
 class AlarmSounder
   @@silence_seconds = 15.0
 
-  def initialize(delegate, player, talker, shower)
+  def initialize(delegate, player, talker, shower, lights)
     @delegate = WeakRef.new(delegate)
     @player = player
     @talker = talker
     @shower = shower
+    @lights = lights
   end
 
   def set_next_alarm(alarm)
@@ -20,6 +21,7 @@ class AlarmSounder
 
   def fired(timer)
     @alarm_timer = nil
+    @lights.turn_on
     @shower.show_control_panel(self)
     @talker.start_talking(self)
     @player.play
@@ -40,6 +42,7 @@ class AlarmSounder
 
   def snooze
     clean_up
+    @lights.turn_off
     @delegate.alarm_snoozed(@alarm)
   end
 

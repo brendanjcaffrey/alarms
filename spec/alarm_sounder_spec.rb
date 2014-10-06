@@ -4,7 +4,8 @@ describe AlarmSounder do
     @player_mock = Object.new
     @talker_mock = Object.new
     @shower_mock = Object.new
-    @sounder = AlarmSounder.new(@delegate_mock, @player_mock, @talker_mock, @shower_mock)
+    @lights_mock = Object.new
+    @sounder = AlarmSounder.new(@delegate_mock, @player_mock, @talker_mock, @shower_mock, @lights_mock)
   end
 
   it 'should schedule a timer with the number of seconds to the alarm date' do
@@ -40,7 +41,8 @@ describe AlarmSounder do
     @sounder.set_next_alarm(nil)
   end
 
-  it 'should start leap motion tracking and start playing audio on timer fire' do
+  it 'should turn on lights, start leap motion tracking and start playing audio on timer fire' do
+    @lights_mock.mock!(:turn_on)
     @player_mock.mock!(:play)
     @talker_mock.mock!(:start_talking) { |del| del.should == @sounder }
     @shower_mock.mock!(:show_control_panel) { |del| del.should == @sounder }
@@ -81,8 +83,9 @@ describe AlarmSounder do
     @sounder.stop
   end
 
-  it 'clean up and delegate on snooze' do
+  it 'turn the lights off, clean up and delegate on snooze' do
     @delegate_mock.mock!(:alarm_snoozed) { |alarm| alarm.should == @alarm }
+    @lights_mock.mock!(:turn_off)
     @sounder.snooze
   end
 
@@ -91,6 +94,7 @@ describe AlarmSounder do
     NSTimer.mock!('scheduledTimerWithTimeInterval:target:selector:userInfo:repeats:') { |int, tar, sel, ui, r| timer_mock }
     @delegate_mock.mock!(:alarm_snoozed) { |alarm| alarm.should == @alarm }
     @player_mock.mock!(:silence)
+    @lights_mock.mock!(:turn_off)
 
     @sounder.did_gesture
     @sounder.snooze

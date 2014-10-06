@@ -6,7 +6,7 @@ class AppDelegate
     defaults = NSUserDefaults.standardUserDefaults
     defaults.setObject('', forKey:@@key) if defaults.objectForKey(@@key) == nil
 
-    @sounder = AlarmSounder.new(self, AudioPlayer.new, LeapMotionTalker.new, ControlPanelShower.new)
+    @sounder = AlarmSounder.new(self, AudioPlayer.new, LeapMotionTalker.new, ControlPanelShower.new, LightsController.new)
     @collection = AlarmCollection.unserialize(defaults.objectForKey('alarms'))
 
     build_menu
