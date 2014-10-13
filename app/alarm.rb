@@ -32,6 +32,15 @@ class Alarm
     Alarm.new(date)
   end
 
+  def self.from_time(time_string)
+    now = Time.at(NSDate.date)
+
+    alarm = Time.at(NSDate.dateWithNaturalLanguageString(time_string))
+    alarm += 24*60*60 if alarm < now
+
+    Alarm.new(alarm)
+  end
+
   def serialize
     @@serialization_formatter.stringFromDate(@date)
   end

@@ -24,6 +24,22 @@ describe Alarm do
     alarm.should == nil
   end
 
+  it 'should return the correct next occurance of a time in .from_time' do
+    alarm = Alarm.from_time('11:59pm')
+    Time.at(alarm.date).day.should == Time.now.day
+
+    alarm = Alarm.from_time('12:01am')
+    Time.at(alarm.date).day.should != Time.now.day
+  end
+
+  it 'should work without am/pm in .from_time' do
+    alarm = Alarm.from_time('23:59')
+    Time.at(alarm.date).day.should == Time.now.day
+
+    alarm = Alarm.from_time('12:01')
+    Time.at(alarm.date).day.should != Time.now.day
+  end
+
   it 'should serialize a date into the correct format' do
     alarm = Alarm.new(NSDate.dateWithNaturalLanguageString(@nl_string))
     alarm.serialize.should == @serialize_string

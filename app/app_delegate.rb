@@ -17,8 +17,9 @@ class AppDelegate
     show_alarm_window(menu_item.representedObject)
   end
 
-  def alarm_added(date)
-    @collection.add_alarm(Alarm.new(date))
+  def alarm_added(arg)
+    arg = Alarm.new(arg) if arg.is_a?(NSDate)
+    @collection.add_alarm(arg)
     alarms_changed
   end
 
