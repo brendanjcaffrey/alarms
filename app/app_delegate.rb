@@ -72,6 +72,7 @@ class AppDelegate
   end
 
   def alarms_changed
+    @status_item.button.looksDisabled = @collection.first_alarm.nil?
     @sounder.set_next_alarm(@collection.first_alarm)
     @collection.serialize_to_defaults
     reset_menu
