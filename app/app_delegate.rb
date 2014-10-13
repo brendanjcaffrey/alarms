@@ -57,8 +57,7 @@ class AppDelegate
 
     @status_item = NSStatusBar.systemStatusBar.statusItemWithLength(NSVariableStatusItemLength).init
     @status_item.setMenu(@status_menu)
-    @status_item.setHighlightMode(true)
-    @status_item.setImage(NSImage.imageNamed('alarm'))
+    @status_item.button.setImage(NSImage.imageNamed('alarm').tap { |i| i.setTemplate(true) })
   end
 
   def fill_menu
