@@ -1,13 +1,9 @@
 class AppDelegate
-  @@key = 'alarms'
   attr_accessor :status_menu
 
   def applicationDidFinishLaunching(notification)
-    defaults = NSUserDefaults.standardUserDefaults
-    defaults.setObject('', forKey:@@key) if defaults.objectForKey(@@key) == nil
-
     @sounder = AlarmSounder.new(self, AudioPlayer.new, LeapMotionTalker.new, ControlPanelShower.new, LightsController.new)
-    @collection = AlarmCollection.unserialize(defaults.objectForKey('alarms'))
+    @collection = AlarmCollection.unserialize_from_defaults
 
     build_menu
     alarms_changed
@@ -72,7 +68,7 @@ class AppDelegate
 
   def alarms_changed
     @sounder.set_next_alarm(@collection.first_alarm)
-    NSUserDefaults.standardUserDefaults.setObject(@collection.serialize, forKey:@@key)
+    @collection.serialize_to_defaults
     reset_menu
   end
 

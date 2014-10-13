@@ -10,7 +10,12 @@ end
 
 Motion::Project::App.setup do |app|
   app.name = 'alarm'
+
   app.info_plist['LSUIElement'] = true
+  app.info_plist['NSAppleScriptEnabled'] = 'YES'
+  app.info_plist['OSAScriptingDefinition'] = 'scripting.sdef'
+
+  app.frameworks << 'Cocoa'
   app.frameworks << 'AVFoundation'
   app.frameworks << 'CoreAudio'
 

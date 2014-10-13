@@ -1,5 +1,7 @@
 class AlarmCollection
+  @@key = 'alarms'
   @@snooze_interval = 60.0*5.0
+
   attr_reader :alarms
 
   def initialize(alarms)
@@ -12,8 +14,18 @@ class AlarmCollection
     AlarmCollection.new(alarms.sort)
   end
 
+  def self.unserialize_from_defaults
+    defaults = NSUserDefaults.standardUserDefaults
+    defaults.setObject('', forKey:@@key) if defaults.objectForKey(@@key) == nil
+    unserialize(defaults.objectForKey(@@key))
+  end
+
   def serialize
     @alarms.map { |alarm| alarm.serialize }.join("\n")
+  end
+
+  def serialize_to_defaults
+    NSUserDefaults.standardUserDefaults.setObject(serialize, forKey:@@key)
   end
 
   def first_alarm
