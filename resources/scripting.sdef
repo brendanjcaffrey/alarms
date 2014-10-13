@@ -7,12 +7,12 @@
 			<cocoa class="ListAllAlarmsCommand"/>
 			<result type="text" description="returns all alarms"/>
 		</command>
-    <command name="add alarm" code="alrmadda" description="add alarm">
+    <command name="add alarm at" code="alrmadda" description="add alarm">
       <cocoa class="AddAlarmCommand"/>
       <direct-parameter description="a text parameter in the format hh:mm a/pm">
         <type type="text"/>
       </direct-parameter>
-      <result type="text" description="the new alarm description"/>
+      <result type="text" description="the new list of alarms"/>
     </command>
 	</suite>
 </dictionary>
