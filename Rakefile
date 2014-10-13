@@ -25,6 +25,7 @@ Motion::Project::App.setup do |app|
   app.pods do
     pod 'SocketRocket'
     pod 'JSONKit'
+    pod 'LIFXKit'
   end
 end
 
