@@ -66,6 +66,23 @@ describe AlarmCollection do
     collection.alarms[1].should == alarm2
   end
 
+  it 'should delete alarms at specified indices' do
+    alarm0 = Alarm.new(NSDate.date.dateByAddingTimeInterval(15))
+    alarm1 = Alarm.new(NSDate.date.dateByAddingTimeInterval(30))
+    alarm2 = Alarm.new(NSDate.date.dateByAddingTimeInterval(45))
+    collection = AlarmCollection.new([alarm0, alarm1, alarm2])
+
+    collection.remove_alarm_at_index(1).should == alarm1
+    collection.alarms[0].should == alarm0
+    collection.alarms[1].should == alarm2
+
+    collection.remove_alarm_at_index(0).should == alarm0
+    collection.alarms[0].should == alarm2
+
+    collection.remove_alarm_at_index(100).should == nil
+    collection.alarms[0].should == alarm2
+  end
+
   it 'should update alarms' do
     alarm0 = Alarm.new(NSDate.date.dateByAddingTimeInterval(15))
     new_date = NSDate.date.dateByAddingTimeInterval(30)

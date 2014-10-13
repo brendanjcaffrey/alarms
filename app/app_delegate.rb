@@ -33,6 +33,11 @@ class AppDelegate
     alarms_changed
   end
 
+  def alarm_deleted_at_index(index)
+    @collection.remove_alarm_at_index(index)
+    alarms_changed
+  end
+
   def alarm_snoozed(alarm)
     @collection.snooze_alarm(alarm)
     alarms_changed

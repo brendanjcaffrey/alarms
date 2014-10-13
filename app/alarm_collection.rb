@@ -45,6 +45,10 @@ class AlarmCollection
     @alarms.reject! { |alarm| alarm == alarm_to_delete }
   end
 
+  def remove_alarm_at_index(index)
+    @alarms.delete_at(index) if index < @alarms.size
+  end
+
   def update_alarm(alarm, new_date)
     remove_alarm(alarm)
     add_alarm(Alarm.new(new_date))

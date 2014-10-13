@@ -14,5 +14,12 @@
       </direct-parameter>
       <result type="text" description="the new list of alarms"/>
     </command>
+    <command name="delete alarm" code="alrmdele" description="delete alarm">
+      <cocoa class="DeleteAlarmCommand"/>
+      <direct-parameter description="an alarm index from the alarm list">
+        <type type="integer"/>
+      </direct-parameter>
+      <result type="text" description="the new list of alarms"/>
+    </command>
 	</suite>
 </dictionary>
