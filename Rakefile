@@ -9,12 +9,14 @@ rescue LoadError
 end
 
 Motion::Project::App.setup do |app|
-  app.name = 'alarm'
+  app.name = 'Alarms'
   app.icon = 'alarm.icns'
+  app.version = '1.0.0'
 
   app.info_plist['LSUIElement'] = true
   app.info_plist['NSAppleScriptEnabled'] = 'YES'
   app.info_plist['OSAScriptingDefinition'] = 'scripting.sdef'
+  app.info_plist['NSHumanReadableCopyright'] = 'Copyright © 2014 Brendan Caffrey. All rights reserved.'
 
   app.frameworks << 'Cocoa'
   app.frameworks << 'AVFoundation'
@@ -32,4 +34,25 @@ end
 
 task :launch do
   system('open `find . | grep "[^spec]\.app$"`') 
+end
+
+task :release do
+  release_path = '/Applications/Alarms.app'
+  found_apps = `find . | grep "Alarms.app$"`
+
+  if !found_apps
+    puts 'Unable to find built app, run rake first'
+    exit 1
+  end
+
+  split = found_apps.split("\n")
+  if split.count != 1
+    puts 'Multiple apps found, run rake clean && rake to build only latest version'
+    exit 2
+  end
+
+  built_path = split.first
+  system("rm -r '#{release_path}'") if File.exists?(release_path)
+  system("cp -r '#{built_path}' '#{release_path}'")
+  system("open '#{release_path}'")
 end
