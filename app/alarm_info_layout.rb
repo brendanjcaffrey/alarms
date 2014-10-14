@@ -1,7 +1,21 @@
 class AlarmInfoLayout < MotionKit::WindowLayout
-  @@edge_spacing = 16
-  @@picker_spacing = 4
-  @@button_spacing = 11
+  @@date_width = 229.0
+  @@time_width = 191.5
+  @@icon_width = 30.0
+
+  @@edge_spacing = 8.0
+  @@picker_spacing = 4.0
+  @@button_spacing = 11.0
+
+  @@width = @@edge_spacing*4.0 + @@picker_spacing*2.0 + @@date_width + @@time_width + @@icon_width
+  @@button_width = (@@width - @@edge_spacing*2.0 - @@button_spacing*2.0) / 3.0
+
+  @@picker_height = 75.0
+  @@button_height = 45.0
+  @@icon_height = @@icon_width + (54.0-@@icon_width)/2.0
+  @@height = @@picker_height + @@button_height + @@edge_spacing*3.0
+
+  @@font_size = 40.0
 
   view :time, :date
   view :delete, :cancel, :submit
@@ -12,48 +26,48 @@ class AlarmInfoLayout < MotionKit::WindowLayout
   end
 
   def layout
-    frame [[0, 0], [232, 115]]
+    frame [[0, 0], [@@width, @@height]]
     styleMask NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask
     level NSPopUpMenuWindowLevel
+    title @alarm.nil? ? 'Add Alarm' : 'Edit Alarm'
 
     @date = add NSDatePicker, :date
-    @icon = add NSImageView, :icon
     @time = add NSDatePicker, :time
+    @icon = add NSImageView, :icon
 
-    @submit = add NSButton, :submit
-    @cancel = add NSButton, :cancel
     @delete = add NSButton, :delete
+    @cancel = add NSButton, :cancel
+    @submit = add NSButton, :submit
   end
 
   def date_style
-    set_date_picker_date
+    set_date_picker_style
     min_date NSDate.date
     date_picker_elements NSYearMonthDayDatePickerElementFlag
 
     constraints do
-      bottom.equals(:submit, :top).minus(@@edge_spacing)
-      right.equals(:time, :left).minus(@@picker_spacing)
+      left.equals(:superview).plus(@@edge_spacing*2.0)
     end
   end
 
   def time_style
-    set_date_picker_date
+    set_date_picker_style
     date_picker_elements NSHourMinuteDatePickerElementFlag
     delegate self
 
     constraints do
-      bottom.equals(:date)
-      right.equals(:icon, :left).minus(@@picker_spacing)
+      left.equals(:date, :right).plus(@@picker_spacing)
     end
   end
 
   def icon_style
+    set_top_row_style
     image image_for_time(Time.new)
-    size_to_fit
 
     constraints do
-      bottom.equals(:date).minus(2)
-      right.equals(:superview).minus(@@edge_spacing)
+      right.equals(:superview).minus(@@edge_spacing*2.0)
+      width(@@icon_width)
+      height(@@icon_height)
     end
   end
 
@@ -63,8 +77,7 @@ class AlarmInfoLayout < MotionKit::WindowLayout
     set_button_style
 
     constraints do
-      bottom.equals(:superview).minus(@@edge_spacing)
-      right.equals(:icon)
+      right.equals(:superview).minus(@@edge_spacing)
     end
   end
 
@@ -74,8 +87,7 @@ class AlarmInfoLayout < MotionKit::WindowLayout
     set_button_style
 
     constraints do
-      bottom.equals(:submit)
-      right.equals(:submit, :left).minus(@@button_spacing)
+      center_x.equals(:superview)
     end
   end
 
@@ -86,8 +98,7 @@ class AlarmInfoLayout < MotionKit::WindowLayout
     enabled @alarm != nil
 
     constraints do
-      bottom.equals(:submit)
-      right.equals(:cancel, :left).minus(@@button_spacing)
+      left.equals(:superview).plus(@@edge_spacing)
     end
   end
 
@@ -105,13 +116,27 @@ class AlarmInfoLayout < MotionKit::WindowLayout
     end
   end
 
-  def set_date_picker_date
+  def set_date_picker_style
     date_value @alarm != nil ? @alarm.date : NSDate.date
+    bezeled false
+    cell.setFont(NSFont.fontWithName('Helvetica Neue Thin', size:@@font_size))
+    set_top_row_style
+  end
+
+  def set_top_row_style
+    constraints do
+      top.equals(:superview).plus(@@edge_spacing)
+    end
   end
 
   def set_button_style
-    size_to_fit
     bezel_style NSRegularSquareBezelStyle
     button_type NSMomentaryPushInButton
+
+    constraints do
+      width @@button_width
+      height @@button_height
+      bottom.equals(:superview).minus(@@edge_spacing)
+    end
   end
 end
