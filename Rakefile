@@ -10,6 +10,7 @@ end
 
 Motion::Project::App.setup do |app|
   app.name = 'alarm'
+  app.icon = 'alarm.icns'
 
   app.info_plist['LSUIElement'] = true
   app.info_plist['NSAppleScriptEnabled'] = 'YES'
