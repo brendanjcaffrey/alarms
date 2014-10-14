@@ -17,7 +17,7 @@ class AlarmInfoLayout < MotionKit::WindowLayout
 
   @@font_size = 40.0
 
-  view :time, :date
+  view :time, :date, :icon
   view :delete, :cancel, :submit
 
   def init_with_alarm(alarm)
@@ -25,11 +25,15 @@ class AlarmInfoLayout < MotionKit::WindowLayout
     init
   end
 
+  def datePickerCell(cell, validateProposedDateValue:date, timeInterval:time)
+    date[0] = controller.validate_date(date[0]) if @date != nil && cell == @date.cell
+    controller.time_updated(date[0]) if @time != nil && cell == @time.cell
+  end
+
   def layout
     frame [[0, 0], [@@width, @@height]]
     styleMask NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask
     level NSPopUpMenuWindowLevel
-    title @alarm.nil? ? 'Add Alarm' : 'Edit Alarm'
 
     @date = add NSDatePicker, :date
     @time = add NSDatePicker, :time
@@ -53,7 +57,6 @@ class AlarmInfoLayout < MotionKit::WindowLayout
   def time_style
     set_date_picker_style
     date_picker_elements NSHourMinuteDatePickerElementFlag
-    delegate self
 
     constraints do
       left.equals(:date, :right).plus(@@picker_spacing)
@@ -62,10 +65,9 @@ class AlarmInfoLayout < MotionKit::WindowLayout
 
   def icon_style
     set_top_row_style
-    image image_for_time(Time.new)
 
     constraints do
-      right.equals(:superview).minus(@@edge_spacing*2.0)
+      right.equals(:superview).minus(@@edge_spacing*2.0 + 2.5)
       width(@@icon_width)
       height(@@icon_height)
     end
@@ -102,25 +104,19 @@ class AlarmInfoLayout < MotionKit::WindowLayout
     end
   end
 
-  def datePickerCell(cell, validateProposedDateValue:date, timeInterval:time)
-    @icon.image = image_for_time(date[0])
-  end
-
   private
 
-  def image_for_time(time)
-    if time.hour < 6 or time.hour >= 18
-      NSImage.imageNamed 'moon'
-    else
-      NSImage.imageNamed 'sun'
-    end
+  def controller
+    window.windowController
   end
 
   def set_date_picker_style
-    date_value @alarm != nil ? @alarm.date : NSDate.date
-    bezeled false
-    cell.setFont(NSFont.fontWithName('Helvetica Neue Thin', size:@@font_size))
     set_top_row_style
+    delegate self
+    bezeled false
+
+    date_value (@alarm != nil ? @alarm : NSDate).date
+    cell.setFont(NSFont.fontWithName('Helvetica Neue Thin', size:@@font_size))
   end
 
   def set_top_row_style
