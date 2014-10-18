@@ -10,13 +10,15 @@ end
 
 Motion::Project::App.setup do |app|
   app.name = 'Alarms'
+  app.identifier = 'com.brendanjcaffrey.alarms'
+  app.copyright = 'Copyright © 2014 Brendan Caffrey. All rights reserved.'
+
   app.icon = 'alarm.icns'
   app.version = '1.0.0'
 
   app.info_plist['LSUIElement'] = true
   app.info_plist['NSAppleScriptEnabled'] = 'YES'
   app.info_plist['OSAScriptingDefinition'] = 'scripting.sdef'
-  app.info_plist['NSHumanReadableCopyright'] = 'Copyright © 2014 Brendan Caffrey. All rights reserved.'
 
   app.frameworks << 'Cocoa'
   app.frameworks << 'AVFoundation'
