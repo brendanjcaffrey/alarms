@@ -1,9 +1,10 @@
 class ControlPanelLayout < MotionKit::WindowLayout
+  include SharedStyles
+
   @@width = 300.0
   @@text_height = 75.0
   @@button_height = 45.0
   @@edge_spacing = 8.0
-  @@font_size = 40.0
   @@height = @@text_height + @@button_height + @@edge_spacing*3.0
   @@button_width = (@@width - @@edge_spacing*3.0) / 2.0
 
@@ -15,9 +16,11 @@ class ControlPanelLayout < MotionKit::WindowLayout
     styleMask NSBorderlessWindowMask 
     level NSPopUpMenuWindowLevel
 
-    @time = add NSTextField, :time
-    @snooze = add NSButton, :snooze
-    @stop = add NSButton, :stop
+    add NSVisualEffectView, :visual_effect do
+      @time = add NSTextField, :time
+      @snooze = add NSButton, :snooze
+      @stop = add NSButton, :stop
+    end
   end
 
   def time_style
@@ -26,7 +29,7 @@ class ControlPanelLayout < MotionKit::WindowLayout
     draws_background false
     editable false
     selectable false
-    font NSFont.fontWithName('Helvetica Neue Thin', size:@@font_size)
+    font text_font
 
     constraints do
       center_x.equals(:superview)
@@ -56,8 +59,7 @@ class ControlPanelLayout < MotionKit::WindowLayout
   private
 
   def button_style
-    bezel_style NSRegularSquareBezelStyle
-    button_type NSMomentaryPushInButton
+    default_button_style
 
     constraints do
       width @@button_width
