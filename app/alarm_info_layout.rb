@@ -47,6 +47,17 @@ class AlarmInfoLayout < MotionKit::WindowLayout
     end
   end
 
+  def visual_effect_style
+    material NSVisualEffectMaterialLight
+    blending_mode NSVisualEffectBlendingModeBehindWindow
+    state NSVisualEffectStateActive
+
+    constraints do
+      width.equals(:superview)
+      height.equals(:superview)
+    end
+  end
+
   def date_style
     date_picker_elements NSYearMonthDayDatePickerElementFlag
     min_date NSDate.date

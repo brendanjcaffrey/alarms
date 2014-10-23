@@ -16,11 +16,9 @@ class ControlPanelLayout < MotionKit::WindowLayout
     styleMask NSBorderlessWindowMask 
     level NSPopUpMenuWindowLevel
 
-    add NSVisualEffectView, :visual_effect do
-      @time = add NSTextField, :time
-      @snooze = add NSButton, :snooze
-      @stop = add NSButton, :stop
-    end
+    @time = add NSTextField, :time
+    @snooze = add NSButton, :snooze
+    @stop = add NSButton, :stop
   end
 
   def time_style
