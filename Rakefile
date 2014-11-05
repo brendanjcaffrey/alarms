@@ -34,8 +34,8 @@ Motion::Project::App.setup do |app|
   end
 end
 
-task :launch do
-  system('open `find . | grep "[^spec]\.app$"`') 
+task :kill do
+  `kill -9 \`ps -ef | grep [A]larms | awk '{print $2}'\``
 end
 
 task :release do
