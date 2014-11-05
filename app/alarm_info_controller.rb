@@ -57,7 +57,15 @@ class AlarmInfoController < NSWindowController
 
   def time_updated(new_time)
     update_icon_for_time(new_time)
-    @layout.date.dateValue = Time.tomorrow if date_time_in_past?(@layout.date.dateValue, new_time)
+    date = @layout.date.dateValue
+
+    if date_time_in_past?(date, new_time)
+      @switched = true
+      Dispatch::Queue.main.async { @layout.date.dateValue = Time.tomorrow }
+    elsif @switched && Time.tomorrow.same_day?(date)
+      @switched = false
+      Dispatch::Queue.main.async { @layout.date.dateValue = Time.now }
+    end
   end
 
   private
