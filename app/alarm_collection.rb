@@ -54,6 +54,11 @@ class AlarmCollection
     add_alarm(Alarm.new(new_date))
   end
 
+  def update_alarm_at_index(index, alarm)
+    remove_alarm_at_index(index)
+    add_alarm(alarm)
+  end
+
   def snooze_alarm(alarm)
     update_alarm(alarm, alarm.date.dateByAddingTimeInterval(@@snooze_interval))
   end

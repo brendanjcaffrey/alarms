@@ -2,6 +2,8 @@ class AppDelegate
   attr_accessor :status_menu
 
   def applicationDidFinishLaunching(notification)
+    return true if RUBYMOTION_ENV == 'test'
+
     @sounder = AlarmSounder.new(self, AudioPlayer.new, LeapMotionTalker.new, ControlPanelShower.new, LightsController.new)
     @collection = AlarmCollection.unserialize_from_defaults
 
@@ -25,6 +27,11 @@ class AppDelegate
 
   def alarm_edited(old_alarm, new_date)
     @collection.update_alarm(old_alarm, new_date)
+    alarms_changed
+  end
+
+  def alarm_edited_at_index(index, new_alarm)
+    @collection.update_alarm_at_index(index, new_alarm)
     alarms_changed
   end
 

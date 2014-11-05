@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
 <dictionary xmlns:xi="http://www.w3.org/2003/XInclude">
-	<xi:include href="file:///System/Library/ScriptingDefinitions/CocoaStandard.sdef" xpointer="xpointer(/dictionary/suite)"/>
   <suite name="Alarms" code="alrm" description="Terminology to list alarms">
 		<command name="list all alarms" code="alrmlist" description="returns all alarms">
 			<cocoa class="ListAllAlarmsCommand"/>
@@ -19,6 +18,16 @@
       <direct-parameter description="an alarm index from the alarm list">
         <type type="integer"/>
       </direct-parameter>
+      <result type="text" description="the new list of alarms"/>
+    </command>
+    <command name="update alarm" code="alrmupdt" description="update alarm">
+      <cocoa class="UpdateAlarmCommand"/>
+      <direct-parameter description="an alarm index from the alarm list">
+        <type type="integer"/>
+      </direct-parameter>
+      <parameter name="to" code="time" type="text" optional="no" description="the time to change the alarm to">
+        <cocoa key="time"/>
+      </parameter>
       <result type="text" description="the new list of alarms"/>
     </command>
 	</suite>
