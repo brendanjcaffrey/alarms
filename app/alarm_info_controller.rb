@@ -13,6 +13,7 @@ class AlarmInfoController < NSWindowController
 
       @title_prefix = @alarm == nil ? 'Add Alarm' : 'Edit Alarm'
       alarm_date = @alarm == nil ? Time.now : @alarm.date
+      @date_updated = @alarm != nil
       set_title_for_date(alarm_date)
       update_icon_for_time(alarm_date)
 
@@ -52,6 +53,7 @@ class AlarmInfoController < NSWindowController
   def validate_date(new_date)
     new_date = Time.tomorrow if date_time_in_past?(new_date, @layout.time.dateValue)
     set_title_for_date(new_date)
+    @date_updated = true unless @switching
     new_date
   end
 
@@ -60,11 +62,9 @@ class AlarmInfoController < NSWindowController
     date = @layout.date.dateValue
 
     if date_time_in_past?(date, new_time)
-      @switched = true
-      Dispatch::Queue.main.async { @layout.date.dateValue = Time.tomorrow }
-    elsif @switched && Time.tomorrow.same_day?(date)
-      @switched = false
-      Dispatch::Queue.main.async { @layout.date.dateValue = Time.now }
+      change_date_in_background(Time.tomorrow)
+    elsif !@date_updated && Time.tomorrow.same_day?(date)
+      change_date_in_background(Time.now)
     end
   end
 
@@ -92,5 +92,14 @@ class AlarmInfoController < NSWindowController
   def date_time_in_past?(proposed_date, proposed_time)
     now = Time.now
     proposed_time.hour_and_minute_less_than?(now) && proposed_date.same_day?(now)
+  end
+
+  def change_date_in_background(new_date)
+    @switching = true
+
+    Dispatch::Queue.main.async do
+      @layout.date.dateValue = new_date
+      @switching = false
+    end
   end
 end
