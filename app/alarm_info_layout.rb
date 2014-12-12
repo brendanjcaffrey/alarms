@@ -1,8 +1,8 @@
 class AlarmInfoLayout < MotionKit::WindowLayout
   include SharedStyles
 
-  @@date_width = 229.0
-  @@time_width = 191.5
+  @@date_width = 210.0
+  @@time_width = 173.0
   @@icon_width = 30.0
 
   @@edge_spacing = 8.0
@@ -78,9 +78,8 @@ class AlarmInfoLayout < MotionKit::WindowLayout
   end
 
   def icon_style
-    top_row_style
-
     constraints do
+      top.equals(:superview).plus(@@edge_spacing + 6.0)
       right.equals(:superview).minus(@@edge_spacing*2.0 + 2.5)
       width(@@icon_width)
       height(@@icon_height)
@@ -128,6 +127,7 @@ class AlarmInfoLayout < MotionKit::WindowLayout
     top_row_style
     delegate self
     bezeled false
+    setDatePickerStyle NSTextFieldDatePickerStyle
 
     date_value (@alarm != nil ? @alarm : NSDate).date
     cell.setFont(text_font)
