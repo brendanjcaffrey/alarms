@@ -21,7 +21,7 @@ class AlarmSounder
 
   def fired(timer)
     @alarm_timer = nil
-    @lights.turn_on
+    @lights.turn_high
     @shower.show_control_panel(self)
     @talker.start_talking(self)
     @player.play
@@ -48,6 +48,7 @@ class AlarmSounder
 
   def stop
     clean_up
+    @lights.turn_normal
     @delegate.alarm_deleted(@alarm)
   end
 
