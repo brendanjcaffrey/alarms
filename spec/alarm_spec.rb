@@ -36,7 +36,7 @@ describe Alarm do
     alarm = Alarm.from_time('23:59')
     Time.at(alarm.date).day.should == Time.now.day
 
-    alarm = Alarm.from_time('12:01')
+    alarm = Alarm.from_time('0:01')
     Time.at(alarm.date).day.should != Time.now.day
   end
 
