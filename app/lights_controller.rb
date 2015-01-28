@@ -1,6 +1,5 @@
 class LightsController
   def initialize
-    @regex = /bedroom/i
     @context = LFXClient.sharedClient.localNetworkContext
     @context.allLightsCollection.addLightCollectionObserver(self)
 
@@ -10,7 +9,7 @@ class LightsController
   end
 
   def lightCollection(collection, didAddLight:light)
-    set_light_state(light) if @state != nil && @color != nil && @regex.match(light.label) != nil
+    set_light_state(light) if @state != nil && @color != nil
   end
 
   def turn_high
@@ -37,7 +36,7 @@ class LightsController
     @state = power_state
     @color = color
     @context.allLightsCollection.each do |light|
-      set_light_state(light) if @regex.match(light.label) != nil
+      set_light_state(light)
     end
   end
 
