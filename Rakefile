@@ -28,8 +28,7 @@ Motion::Project::App.setup do |app|
   app.vendor_project('vendor/switchvolume', :static)
 
   app.pods do
-    pod 'SocketRocket'
-    pod 'JSONKit'
+    pod 'SocketRocket', '= 0.3.1-beta2'
     pod 'LIFXKit'
   end
 end

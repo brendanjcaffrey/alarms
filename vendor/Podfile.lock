@@ -1,16 +1,13 @@
 PODS:
-  - JSONKit (1.5pre)
-  - LIFXKit (0.6.0)
+  - LIFXKit (0.6.1)
   - SocketRocket (0.3.1-beta2)
 
 DEPENDENCIES:
-  - JSONKit
   - LIFXKit
-  - SocketRocket
+  - SocketRocket (= 0.3.1-beta2)
 
 SPEC CHECKSUMS:
-  JSONKit: efef3bbd3372ff33f96b9c6f34cf4fe18e74ab69
-  LIFXKit: 6ffeaaba2ffc488e613ad44767f1ff9a51e00071
-  SocketRocket: 79a68ae186063c65e1fe6f638b1ae2927aa5f304
+  LIFXKit: 81032f51813a4e9aea0f7da221b7950b95181022
+  SocketRocket: 7284ab9370a06c99aba92b2fe3a32aedd0f9a6fa
 
-COCOAPODS: 0.33.1
+COCOAPODS: 0.38.2

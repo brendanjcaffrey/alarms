@@ -17,7 +17,7 @@ class AlarmInfoLayout < MotionKit::WindowLayout
   @@icon_height = @@icon_width + (54.0-@@icon_width)/2.0
   @@height = @@picker_height + @@button_height + @@edge_spacing*3.0
 
-  view :time, :date, :icon
+  view :time_field, :date_field, :icon
   view :delete, :cancel, :submit
   view :visual_effect
 
@@ -27,8 +27,9 @@ class AlarmInfoLayout < MotionKit::WindowLayout
   end
 
   def datePickerCell(cell, validateProposedDateValue:date, timeInterval:time)
-    date[0] = controller.validate_date(date[0]) if @date != nil && cell == @date.cell
-    controller.time_updated(date[0]) if @time != nil && cell == @time.cell
+
+    date[0] = controller.validate_date(date[0]) if @date_field != nil && cell == @date_field.cell
+    controller.time_updated(date[0]) if @time_field != nil && cell == @time_field.cell
   end
 
   def layout
@@ -37,8 +38,8 @@ class AlarmInfoLayout < MotionKit::WindowLayout
     level NSPopUpMenuWindowLevel
 
     add NSVisualEffectView, :visual_effect do
-      @date = add NSDatePicker, :date
-      @time = add NSDatePicker, :time
+      @date_field = add NSDatePicker, :date_field
+      @time_field = add NSDatePicker, :time_field
       @icon = add NSImageView, :icon
 
       @delete = add NSButton, :delete
@@ -58,7 +59,7 @@ class AlarmInfoLayout < MotionKit::WindowLayout
     end
   end
 
-  def date_style
+  def date_field_style
     date_picker_elements NSYearMonthDayDatePickerElementFlag
     min_date NSDate.date
     date_picker_style
@@ -68,12 +69,12 @@ class AlarmInfoLayout < MotionKit::WindowLayout
     end
   end
 
-  def time_style
+  def time_field_style
     date_picker_elements NSHourMinuteDatePickerElementFlag
     date_picker_style
 
     constraints do
-      left.equals(:date, :right).plus(@@picker_spacing)
+      left.equals(:date_field, :right).plus(@@picker_spacing)
     end
   end
 

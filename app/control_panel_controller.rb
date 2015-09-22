@@ -45,7 +45,7 @@ class ControlPanelController < NSWindowController
 
   def update_time
     @formatter ||= NSDateFormatter.alloc.init.tap { |format| format.setDateFormat 'hh:mm:ss a' }
-    @layout.time.setStringValue(@formatter.stringFromDate(NSDate.date))
+    @layout.time_field.setStringValue(@formatter.stringFromDate(NSDate.date))
 
     self.window.makeKeyAndOrderFront(self)
     NSApp.activateIgnoringOtherApps(true)

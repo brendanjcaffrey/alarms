@@ -9,7 +9,7 @@ class AlarmInfoController < NSWindowController
     super.tap do
       @layout = AlarmInfoLayout.alloc.init_with_alarm(@alarm)
       self.window = @layout.window
-      self.window.makeFirstResponder(@layout.time)
+      self.window.makeFirstResponder(@layout.time_field)
 
       @title_prefix = @alarm == nil ? 'Add Alarm' : 'Edit Alarm'
       alarm_date = @alarm == nil ? Time.now : @alarm.date
@@ -51,7 +51,7 @@ class AlarmInfoController < NSWindowController
   end
 
   def validate_date(new_date)
-    new_date = Time.tomorrow if date_time_in_past?(new_date, @layout.time.dateValue)
+    new_date = Time.tomorrow if date_time_in_past?(new_date, @layout.time_field.dateValue)
     set_title_for_date(new_date)
     @date_updated = true unless @switching
     new_date
@@ -59,7 +59,7 @@ class AlarmInfoController < NSWindowController
 
   def time_updated(new_time)
     update_icon_for_time(new_time)
-    date = @layout.date.dateValue
+    date = @layout.date_field.dateValue
 
     if date_time_in_past?(date, new_time)
       change_date_in_background(Time.tomorrow)
@@ -71,8 +71,8 @@ class AlarmInfoController < NSWindowController
   private
 
   def combine_date_and_time
-    date = Time.at(@layout.date.dateValue)
-    time = Time.at(@layout.time.dateValue)
+    date = Time.at(@layout.date_field.dateValue)
+    time = Time.at(@layout.time_field.dateValue)
 
     Time.local(date.year, date.mon, date.day, time.hour, time.min)
   end
@@ -98,7 +98,7 @@ class AlarmInfoController < NSWindowController
     @switching = true
 
     Dispatch::Queue.main.async do
-      @layout.date.dateValue = new_date
+      @layout.date_field.dateValue = new_date
       @switching = false
     end
   end

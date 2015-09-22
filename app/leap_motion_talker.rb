@@ -22,7 +22,7 @@ class LeapMotionTalker
     return unless @delegate
 
     error_ptr = Pointer.new(:object)
-    parsed = message.description.objectFromJSONStringWithParseOptions(JKParseOptionValidFlags, error:error_ptr)
+    parsed = BW::JSON.parse(message.description)
 
     if parsed.nil?
       error = error_ptr[0]
@@ -36,6 +36,6 @@ class LeapMotionTalker
   def webSocket(webSocket, didFailWithError:error)
   end
 
-  def webSocket(webSocket, didCloseWithCode:code,reason:reason)
+  def webSocket(webSocket, didCloseWithCode:code, reason:_)
   end
 end

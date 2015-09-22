@@ -8,20 +8,20 @@ class ControlPanelLayout < MotionKit::WindowLayout
   @@height = @@text_height + @@button_height + @@edge_spacing*3.0
   @@button_width = (@@width - @@edge_spacing*3.0) / 2.0
 
-  view :time
+  view :time_field
   view :snooze, :stop
 
   def layout
     frame [[0, 0], [@@width, @@height]]
-    styleMask NSBorderlessWindowMask 
+    styleMask NSBorderlessWindowMask
     level NSPopUpMenuWindowLevel
 
-    @time = add NSTextField, :time
+    @time_field = add NSTextField, :time_field
     @snooze = add NSButton, :snooze
     @stop = add NSButton, :stop
   end
 
-  def time_style
+  def time_field_style
     string_value '12:00:00 pm'
     bezeled false
     draws_background false
