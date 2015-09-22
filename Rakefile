@@ -11,7 +11,7 @@ end
 Motion::Project::App.setup do |app|
   app.name = 'Alarms'
   app.identifier = 'com.brendanjcaffrey.alarms'
-  app.copyright = 'Copyright © 2014 Brendan Caffrey. All rights reserved.'
+  app.copyright = 'Copyright © 2014-2015 Brendan Caffrey. All rights reserved.'
 
   app.icon = 'alarm.icns'
   app.version = '1.0.0'
