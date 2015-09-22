@@ -5,7 +5,7 @@ class LightsController
 
     clear_control
     @high_color = LFXHSBKColor.whiteColorWithBrightness(1.0, kelvin:6000)
-    @normal_color = LFXHSBKColor.whiteColorWithBrightness(0.4, kelvin:4500)
+    @normal_color = LFXHSBKColor.colorWithHue(54.0, saturation:0.36, brightness:0.85, kelvin:3500)
   end
 
   def lightCollection(collection, didAddLight:light)
