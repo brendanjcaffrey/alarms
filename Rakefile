@@ -24,12 +24,12 @@ Motion::Project::App.setup do |app|
   app.frameworks << 'AVFoundation'
   app.frameworks << 'CoreAudio'
 
+  app.vendor_project('vendor/lifx', :static)
   app.vendor_project('vendor/switchaudio', :static)
   app.vendor_project('vendor/switchvolume', :static)
 
   app.pods do
     pod 'SocketRocket', '= 0.3.1-beta2'
-    pod 'LIFXKit'
   end
 end
 
