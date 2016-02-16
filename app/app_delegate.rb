@@ -4,7 +4,7 @@ class AppDelegate
   def applicationDidFinishLaunching(notification)
     return true if RUBYMOTION_ENV == 'test'
 
-    @sounder = AlarmSounder.new(self, AudioPlayer.new, LeapMotionTalker.new, ControlPanelShower.new, LightsController.new)
+    @sounder = AlarmDriver.new(self, [LeapMotionAction.new, LifxAction.new, PanelAction.new, SoundAction.new])
     @collection = AlarmCollection.unserialize_from_defaults
 
     build_menu

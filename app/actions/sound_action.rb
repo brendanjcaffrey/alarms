@@ -1,4 +1,4 @@
-class AudioPlayer
+class SoundAction < Action
   @@default_output = 'Built-in Output'
   @@max_volume = 1.0
   @@start_volume = 0.30
@@ -15,9 +15,10 @@ class AudioPlayer
     end
 
     @player.setNumberOfLoops(-1)
+    super
   end
 
-  def play
+  def started
     @timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target:self, selector:'update_volume', userInfo:nil, repeats:true)
     @old_output = getCurrentOutputDeviceName
     setOutputDeviceByName(@@default_output)
@@ -29,6 +30,22 @@ class AudioPlayer
     @player.play
   end
 
+  def paused
+    @player.stop
+  end
+
+  def unpaused
+    @player.play
+  end
+
+  def finished
+    invalidate_timer
+    @player.stop
+    setOutputVolume(@old_volume)
+    setOutputDeviceByName(@old_output)
+  end
+
+
   def update_volume
     @current_volume = @current_volume + @@increase_by
     if @current_volume >= @@max_volume
@@ -36,21 +53,6 @@ class AudioPlayer
       invalidate_timer
     end
     setOutputVolume(@current_volume)
-  end
-
-  def stop
-    invalidate_timer
-    @player.stop
-    setOutputVolume(@old_volume)
-    setOutputDeviceByName(@old_output)
-  end
-
-  def silence
-    @player.stop
-  end
-
-  def unsilence
-    @player.play
   end
 
   private

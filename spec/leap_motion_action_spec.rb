@@ -1,4 +1,4 @@
-describe LeapMotionTalker do
+describe LeapMotionAction do
   it 'should start listening when it receives the appropriate message, send a message when it receives a gesture and close when it receives the stop message' do
     socket_stub = Object.new
     socket_stub.mock!(:delegate=) { |obj| obj.should != nil }
@@ -9,14 +9,18 @@ describe LeapMotionTalker do
     initial_stub = stub(:initWithURLRequest) { |url| socket_stub }
     SRWebSocket.mock!(:alloc, return: initial_stub)
 
-    delegate = mock(:did_gesture)
-    talker = LeapMotionTalker.new
-    talker.start_talking(delegate)
+    timer_stub = mock(:invalidate)
+    NSTimer.mock!('scheduledTimerWithTimeInterval:target:selector:userInfo:repeats:') { |_, _, _, _, _| timer_stub}
 
-    talker.webSocketDidOpen(socket_stub)
+    delegate = mock(:pause)
+    action = LeapMotionAction.new
+    action.set_delegate(delegate)
+    action.started
+
+    action.webSocketDidOpen(socket_stub)
     json = '{"gestures":"hi"}'
-    talker.webSocket(socket_stub, didReceiveMessage:json)
+    action.webSocket(socket_stub, didReceiveMessage: json)
 
-    talker.stop_talking
+    action.finished
   end
 end
