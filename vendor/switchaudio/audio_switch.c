@@ -31,61 +31,66 @@ Modified by Brendan Caffrey, originally from https://github.com/deweller/switcha
 
 #include "audio_switch.h"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 bool isAnOutputDevice(AudioDeviceID deviceID) {
-	UInt32 propertySize = 256;
-	
-	// if there are any output streams, then it is an output
-	AudioDeviceGetPropertyInfo(deviceID, 0, false, kAudioDevicePropertyStreams, &propertySize, NULL);
-	if (propertySize > 0) return true;
-    
-  return false;
+    UInt32 propertySize = 256;
+
+    // if there are any output streams, then it is an output
+    AudioDeviceGetPropertyInfo(deviceID, 0, false, kAudioDevicePropertyStreams, &propertySize, NULL);
+    if (propertySize > 0) return true;
+
+    return false;
 }
 
 AudioDeviceID getCurrentOutputDeviceId() {
-	AudioDeviceID deviceID = kAudioDeviceUnknown;
-	UInt32 propertySize = sizeof(deviceID);
-  AudioHardwareGetProperty(kAudioHardwarePropertyDefaultOutputDevice, &propertySize, &deviceID);
-	return deviceID;
+    AudioDeviceID deviceID = kAudioDeviceUnknown;
+    UInt32 propertySize = sizeof(deviceID);
+    AudioHardwareGetProperty(kAudioHardwarePropertyDefaultOutputDevice, &propertySize, &deviceID);
+    return deviceID;
 }
 
 void getDeviceNameFromId(AudioDeviceID deviceID, char * deviceName) {
-	UInt32 propertySize = 256;
-	AudioDeviceGetProperty(deviceID, 0, false, kAudioDevicePropertyDeviceName, &propertySize, deviceName);  
+    UInt32 propertySize = 256;
+    AudioDeviceGetProperty(deviceID, 0, false, kAudioDevicePropertyDeviceName, &propertySize, deviceName);
 }
 
 char* getCurrentOutputDeviceName() {
-	char *currentDeviceName = (char *) malloc(sizeof(char)*256);
-	getDeviceNameFromId(getCurrentOutputDeviceId(), currentDeviceName);
-	return currentDeviceName;
+    char *currentDeviceName = (char *) malloc(sizeof(char)*256);
+    getDeviceNameFromId(getCurrentOutputDeviceId(), currentDeviceName);
+    return currentDeviceName;
 }
 
 AudioDeviceID getOutputDeviceIdFromName(char* requestedDeviceName) {
-	UInt32 propertySize;
-	AudioDeviceID dev_array[64];
-	int numberOfDevices = 0;
-	char deviceName[256];
-	
-	AudioHardwareGetPropertyInfo(kAudioHardwarePropertyDevices, &propertySize, NULL);
-	AudioHardwareGetProperty(kAudioHardwarePropertyDevices, &propertySize, dev_array);
-	numberOfDevices = (propertySize / sizeof(AudioDeviceID));
-	
-	for(int i = 0; i < numberOfDevices; ++i) {
-	  if (!isAnOutputDevice(dev_array[i])) continue;
-		
-		getDeviceNameFromId(dev_array[i], deviceName);
-		if (strcmp(requestedDeviceName, deviceName) == 0) return dev_array[i];
-	}
-	
-	return kAudioDeviceUnknown;
+    UInt32 propertySize;
+    AudioDeviceID dev_array[64];
+    int numberOfDevices = 0;
+    char deviceName[256];
+
+    AudioHardwareGetPropertyInfo(kAudioHardwarePropertyDevices, &propertySize, NULL);
+    AudioHardwareGetProperty(kAudioHardwarePropertyDevices, &propertySize, dev_array);
+    numberOfDevices = (propertySize / sizeof(AudioDeviceID));
+
+    for(int i = 0; i < numberOfDevices; ++i) {
+        if (!isAnOutputDevice(dev_array[i])) continue;
+
+        getDeviceNameFromId(dev_array[i], deviceName);
+        if (strcmp(requestedDeviceName, deviceName) == 0) return dev_array[i];
+    }
+
+    return kAudioDeviceUnknown;
 }
 
 void setOutputDeviceId(AudioDeviceID newDeviceID) {
-	UInt32 propertySize = sizeof(UInt32);
-  AudioHardwareSetProperty(kAudioHardwarePropertyDefaultOutputDevice, propertySize, &newDeviceID);
+    UInt32 propertySize = sizeof(UInt32);
+    AudioHardwareSetProperty(kAudioHardwarePropertyDefaultOutputDevice, propertySize, &newDeviceID);
 }
 
 void setOutputDeviceByName(char* requestedDeviceName) {
-	AudioDeviceID chosenDeviceID = getOutputDeviceIdFromName(requestedDeviceName);
-	setOutputDeviceId(chosenDeviceID);
+    AudioDeviceID chosenDeviceID = getOutputDeviceIdFromName(requestedDeviceName);
+    setOutputDeviceId(chosenDeviceID);
 }
+
+#pragma GCC diagnostic pop
 
