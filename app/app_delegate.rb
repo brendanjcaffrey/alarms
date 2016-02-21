@@ -9,6 +9,7 @@ class AppDelegate
 
     build_menu
     alarms_changed
+    set_midnight_timer
   end
 
   def add_alarm
@@ -50,10 +51,24 @@ class AppDelegate
     alarms_changed
   end
 
+  def midnight_timer_fired(sender)
+    reset_menu
+    set_midnight_timer
+  end
+
   private
 
+  def set_midnight_timer
+    @midnight_timer.invalidate if @midnight_timer
+
+    now = Time.at(NSDate.date)
+    seconds_until_midnight = (23-now.hour)*3600 + (59-now.min)*60 + (60-now.sec)
+    @midnight_timer = NSTimer.scheduledTimerWithTimeInterval(seconds_until_midnight,
+      target: self, selector: 'midnight_timer_fired:', userInfo: nil, repeats: false)
+  end
+
   def show_alarm_window(alarm)
-    @window = AlarmInfoController.alloc.init_with_alarm(alarm, delegate:self)
+    @window = AlarmInfoController.alloc.init_with_alarm(alarm, delegate: self)
     @window.window.center
     @window.showWindow(nil)
     NSApplication.sharedApplication.activateIgnoringOtherApps(true)
@@ -69,13 +84,13 @@ class AppDelegate
 
   def fill_menu
     @collection.alarms.each do |alarm|
-      @status_menu.addItem create_alarm_item(alarm)
+      @status_menu.addItem(create_alarm_item(alarm))
     end
 
-    @status_menu.addItem NSMenuItem.separatorItem if @collection.first_alarm != nil
-    @status_menu.addItem create_menu_item('Add Alarm...', 'add_alarm')
-    @status_menu.addItem create_menu_item('About Alarms', 'orderFrontStandardAboutPanel:')
-    @status_menu.addItem create_menu_item('Quit', 'terminate:')
+    @status_menu.addItem(NSMenuItem.separatorItem) if @collection.first_alarm != nil
+    @status_menu.addItem(create_menu_item('Add Alarm...', 'add_alarm'))
+    @status_menu.addItem(create_menu_item('About Alarms', 'orderFrontStandardAboutPanel:'))
+    @status_menu.addItem(create_menu_item('Quit', 'terminate:'))
   end
 
   def alarms_changed
@@ -91,11 +106,11 @@ class AppDelegate
   end
 
   def create_menu_item(name, action)
-    NSMenuItem.alloc.initWithTitle(name, action:action, keyEquivalent:'')
+    NSMenuItem.alloc.initWithTitle(name, action: action, keyEquivalent: '')
   end
 
   def create_alarm_item(alarm)
-    item = NSMenuItem.alloc.initWithTitle(alarm_string(alarm), action:'edit_alarm:', keyEquivalent:'')
+    item = NSMenuItem.alloc.initWithTitle(alarm_string(alarm), action: 'edit_alarm:', keyEquivalent: '')
     item.setRepresentedObject(alarm)
     item
   end
