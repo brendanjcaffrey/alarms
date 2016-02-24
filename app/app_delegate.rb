@@ -22,13 +22,15 @@ class AppDelegate
 
   def alarm_added(arg)
     arg = Alarm.new(arg) if arg.is_a?(NSDate)
-    @collection.add_alarm(arg)
+    return false unless @collection.add_alarm(arg)
     alarms_changed
+    true
   end
 
   def alarm_edited(old_alarm, new_date)
-    @collection.update_alarm(old_alarm, new_date)
+    return false unless @collection.update_alarm(old_alarm, new_date)
     alarms_changed
+    true
   end
 
   def alarm_edited_at_index(index, new_alarm)

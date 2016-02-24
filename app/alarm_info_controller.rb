@@ -32,13 +32,9 @@ class AlarmInfoController < NSWindowController
   end
 
   def submit(sender)
-    if @alarm == nil
-      @delegate.alarm_added(combine_date_and_time)
-    else
-      @delegate.alarm_edited(@alarm, combine_date_and_time)
-    end
-
-    close
+    result = @alarm == nil ? @delegate.alarm_added(combine_date_and_time) :
+                             @delegate.alarm_edited(@alarm, combine_date_and_time)
+    result ? close : alert_invalid
   end
 
   def cancel(sender)
@@ -101,5 +97,13 @@ class AlarmInfoController < NSWindowController
       @layout.date_field.dateValue = new_date
       @switching = false
     end
+  end
+
+  def alert_invalid
+    alert = NSAlert.alloc.init
+    alert.alertStyle = NSWarningAlertStyle
+    alert.messageText = 'Invalid time'
+    alert.informativeText = 'Time is too close to another alarm'
+    alert.runModal
   end
 end

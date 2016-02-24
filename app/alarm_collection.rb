@@ -1,6 +1,7 @@
 class AlarmCollection
   @@key = 'alarms'
   @@snooze_interval = 60.0*10.0 # seconds
+  @@exclusivity_window_range = 60.0*15.0 # seconds
 
   attr_reader :alarms
 
@@ -37,8 +38,14 @@ class AlarmCollection
       raise Exception.new('Alarm must be instance of Alarm in AlarmCollection.add_alarm')
     end
 
+    # check to make sure there are no other alarms too close to this one
+    start_date = alarm.date.dateByAddingTimeInterval(-1.0 * @@exclusivity_window_range)
+    end_date = alarm.date.dateByAddingTimeInterval(@@exclusivity_window_range)
+    return false if @alarms.any? { |a| a.date > start_date && a.date < end_date }
+
     @alarms << alarm
     @alarms.sort!
+    true
   end
 
   def remove_alarm(alarm_to_delete)
@@ -51,7 +58,13 @@ class AlarmCollection
 
   def update_alarm(alarm, new_date)
     remove_alarm(alarm)
-    add_alarm(Alarm.new(new_date))
+    if add_alarm(Alarm.new(new_date))
+      true
+    else
+      # if the new alarm got rejected, make sure to leave the old one in
+      add_alarm(alarm)
+      false
+    end
   end
 
   def update_alarm_at_index(index, alarm)

@@ -40,15 +40,26 @@ describe AlarmCollection do
 
   it 'should insert alarms in sorted order' do
     alarm0 = Alarm.new(NSDate.date.dateByAddingTimeInterval(15))
-    alarm1 = Alarm.new(NSDate.date.dateByAddingTimeInterval(30))
-    alarm2 = Alarm.new(NSDate.date.dateByAddingTimeInterval(45))
+    alarm1 = Alarm.new(NSDate.date.dateByAddingTimeInterval(30000))
+    alarm2 = Alarm.new(NSDate.date.dateByAddingTimeInterval(45000))
     collection = AlarmCollection.new([alarm1])
 
-    collection.add_alarm(alarm2)
+    collection.add_alarm(alarm2).should == true
     collection.alarms[1].should == alarm2
 
-    collection.add_alarm(alarm0)
+    collection.add_alarm(alarm0).should == true
     collection.alarms[0].should == alarm0
+  end
+
+  it 'should not let you insert alarms at the same time or near each other' do
+    alarm0 = Alarm.new(NSDate.date.dateByAddingTimeInterval(15))
+    alarm1 = Alarm.new(NSDate.date.dateByAddingTimeInterval(15))
+    alarm2 = Alarm.new(NSDate.date.dateByAddingTimeInterval(15 + 60))
+    collection = AlarmCollection.new([alarm0])
+    collection.add_alarm(alarm1).should == false
+    collection.alarms.count == 1
+    collection.add_alarm(alarm2).should == false
+    collection.alarms.count == 1
   end
 
   it 'should throw an exception if you try to insert something other than an Alarm' do
@@ -88,8 +99,20 @@ describe AlarmCollection do
     new_date = NSDate.date.dateByAddingTimeInterval(30)
 
     collection = AlarmCollection.new([alarm0])
-    collection.update_alarm(alarm0, new_date)
+    collection.update_alarm(alarm0, new_date).should == true
     collection.alarms[0].date.should == new_date
+  end
+
+  it 'should not maintain the original alarm if it can\'t update it' do
+    orig_date = NSDate.date.dateByAddingTimeInterval(15)
+    new_date = NSDate.date.dateByAddingTimeInterval(30000)
+    alarm0 = Alarm.new(orig_date)
+    alarm1 = Alarm.new(new_date)
+
+    collection = AlarmCollection.new([alarm0, alarm1])
+    collection.update_alarm(alarm0, new_date).should == false
+    collection.alarms[0].date.should == orig_date
+    collection.alarms[1].date.should == new_date
   end
 
   it 'should update alarms at indices' do

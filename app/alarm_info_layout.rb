@@ -35,7 +35,9 @@ class AlarmInfoLayout < MotionKit::WindowLayout
   def layout
     frame [[0, 0], [@@width, @@height]]
     styleMask NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask
-    level NSPopUpMenuWindowLevel
+
+    # NOTE: raising this level will make the invalid time alert pop up behind the window
+    level NSTornOffMenuWindowLevel
 
     add NSVisualEffectView, :visual_effect do
       @date_field = add NSDatePicker, :date_field
