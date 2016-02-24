@@ -1,6 +1,6 @@
 class AlarmCollection
   @@key = 'alarms'
-  @@snooze_interval = 60.0*15.0
+  @@snooze_interval = 60.0*10.0 # seconds
 
   attr_reader :alarms
 

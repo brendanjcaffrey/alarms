@@ -1,5 +1,5 @@
 class MaxTimeAction < Action
-  @@max_time = 60 # seconds
+  @@max_time = 120 # seconds
 
   def started
     @timer = NSTimer.scheduledTimerWithTimeInterval(@@max_time, target: self, selector: 'stop_timer_fired', userInfo: nil, repeats: true)
