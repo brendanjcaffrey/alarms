@@ -34,8 +34,9 @@ class AppDelegate
   end
 
   def alarm_edited_at_index(index, new_alarm)
-    @collection.update_alarm_at_index(index, new_alarm)
+    return false unless @collection.update_alarm_at_index(index, new_alarm)
     alarms_changed
+    true
   end
 
   def alarm_deleted(alarm)

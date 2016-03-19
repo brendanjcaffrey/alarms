@@ -1,8 +1,13 @@
 class UpdateAlarmCommand < ListAllAlarmsCommand
   def performDefaultImplementation
-    NSApplication.sharedApplication.delegate.alarm_edited_at_index(directParameter,
-      Alarm.from_time(arguments['time']))
+    return_string = super
+    new_alarm = Alarm.from_time(arguments['time'])
+    delegate = NSApplication.sharedApplication.delegate
 
-    super
+    if !delegate.alarm_edited_at_index(directParameter, new_alarm)
+      return_string = "Unable to update alarm, too close to another.\n\n" + return_string
+    end
+
+    return_string
   end
 end
