@@ -13,7 +13,7 @@ class AlarmInfoController < NSWindowController
 
       @title_prefix = @alarm == nil ? 'Add Alarm' : 'Edit Alarm'
       alarm_date = @alarm == nil ? Time.now : @alarm.date
-      @date_updated = @alarm != nil
+      @date_updated = @alarm != nil && @alarm.date.timeIntervalSinceNow > 24*60*60
       set_title_for_date(alarm_date)
       update_icon_for_time(alarm_date)
 
