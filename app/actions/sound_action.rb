@@ -6,9 +6,9 @@ class SoundAction < Action
 
   def initialize
     error_ptr = Pointer.new(:object)
-    alarm_url = NSURL.fileURLWithPath(NSBundle.mainBundle.pathForResource('alarm', ofType:'m4a'))
+    alarm_url = NSURL.fileURLWithPath(NSBundle.mainBundle.pathForResource('alarm', ofType: 'm4a'))
 
-    @player = AVAudioPlayer.alloc.initWithContentsOfURL(alarm_url, error:error_ptr)
+    @player = AVAudioPlayer.alloc.initWithContentsOfURL(alarm_url, error: error_ptr)
     if !@player
       NSAlert.alertWithError(error[0]).runModal
       exit
@@ -19,7 +19,7 @@ class SoundAction < Action
   end
 
   def started
-    @timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target:self, selector:'update_volume', userInfo:nil, repeats:true)
+    @timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: 'update_volume', userInfo: nil, repeats: true)
     @old_output = getCurrentOutputDeviceName
     setOutputDeviceByName(@@default_output)
 
@@ -41,8 +41,10 @@ class SoundAction < Action
   def finished
     invalidate_timer
     @player.stop
-    setOutputVolume(@old_volume)
-    setOutputDeviceByName(@old_output)
+
+    setOutputVolume(@old_volume) if @old_volume
+    setOutputDeviceByName(@old_output) if @old_output
+    @old_volume = @old_output = nil
   end
 
 
@@ -58,8 +60,7 @@ class SoundAction < Action
   private
 
   def invalidate_timer
-    return if @timer.nil? || !@timer.isValid
-    @timer.invalidate
+    @timer.invalidate if @timer
     @timer = nil
   end
 end

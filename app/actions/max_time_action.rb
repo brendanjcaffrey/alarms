@@ -7,6 +7,7 @@ class MaxTimeAction < Action
 
   def finished
     @timer.invalidate if @timer
+    @timer = nil
   end
 
   def stop_timer_fired

@@ -36,14 +36,14 @@ struct lifx_lan_header
 
 struct lifx_lan_device_set_power
 {
-    struct lifx_lan_header header;
+    struct   lifx_lan_header header;
     uint16_t level;
 };
 
 struct lifx_lan_light_set_color
 {
-    struct lifx_lan_header header;
-    uint8_t reserved;
+    struct   lifx_lan_header header;
+    uint8_t  reserved;
     uint16_t hue;
     uint16_t saturation;
     uint16_t brightness;
@@ -52,19 +52,20 @@ struct lifx_lan_light_set_color
 };
 #pragma pack(pop)
 
-int lifx_lan_open_socket_(void)
+int lifx_lan_open_socket(void)
 {
     int fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-    if (fd == -1) return -1;
+    if (fd == -1) { return -1; }
 
     int bcast_enable = 1;
-    if (setsockopt(fd, SOL_SOCKET, SO_BROADCAST, &bcast_enable, sizeof(bcast_enable)) != 0) return -1;
+    if (setsockopt(fd, SOL_SOCKET, SO_BROADCAST, &bcast_enable, sizeof(bcast_enable)) != 0) { return -1; }
 
     return fd;
 }
 
-void lifx_lan_close_socket_(int fd)
+void lifx_lan_close_socket(int fd)
 {
+    if (fd == -1) { return; }
     close(fd);
 }
 
@@ -92,37 +93,39 @@ void lifx_lan_encode_header_(struct lifx_lan_header* header, char type, size_t m
     header->res_required = 1;
 }
 
-void lifx_lan_lights_off(void)
+void lifx_lan_lights_off(int fd, uint16_t seqnum)
 {
-    int fd = lifx_lan_open_socket_();
-    if (fd == -1) return;
+    if (fd == -1) { return; }
 
     struct lifx_lan_device_set_power msg;
-    lifx_lan_encode_header_(&msg.header, LIFX_LAN_MESSAGE_TYPE_DEVICE_SET_POWER, sizeof(msg), 0);
+    lifx_lan_encode_header_(&msg.header, LIFX_LAN_MESSAGE_TYPE_DEVICE_SET_POWER, sizeof(msg), seqnum);
     msg.level = LIFX_LAN_LEVEL_POWERED_OFF;
 
     lifx_lan_send_(fd, &msg, sizeof(msg));
-    lifx_lan_close_socket_(fd);
 }
 
-void lifx_lan_set_color(uint16_t hue, uint16_t saturation, uint16_t brightness, uint16_t kelvin)
+void lifx_lan_lights_on(int fd, uint16_t seqnum)
 {
-    int fd = lifx_lan_open_socket_();
-    if (fd == -1) return;
+    if (fd == -1) { return; }
 
-    struct lifx_lan_device_set_power power_msg;
-    lifx_lan_encode_header_(&power_msg.header, LIFX_LAN_MESSAGE_TYPE_DEVICE_SET_POWER, sizeof(power_msg), 0);
-    power_msg.level = LIFX_LAN_LEVEL_POWERED_ON;
+    struct lifx_lan_device_set_power msg;
+    lifx_lan_encode_header_(&msg.header, LIFX_LAN_MESSAGE_TYPE_DEVICE_SET_POWER, sizeof(msg), seqnum);
+    msg.level = LIFX_LAN_LEVEL_POWERED_ON;
+
+    lifx_lan_send_(fd, &msg, sizeof(msg));
+}
+
+void lifx_lan_set_color(int fd, uint16_t seqnum, uint16_t hue, uint16_t saturation, uint16_t brightness, uint16_t kelvin, uint32_t duration_millis)
+{
+    if (fd == -1) { return; }
 
     struct lifx_lan_light_set_color color_msg;
-    lifx_lan_encode_header_(&color_msg.header, LIFX_LAN_MESSAGE_TYPE_LIGHT_SET_COLOR, sizeof(color_msg), 1);
+    lifx_lan_encode_header_(&color_msg.header, LIFX_LAN_MESSAGE_TYPE_LIGHT_SET_COLOR, sizeof(color_msg), seqnum);
     color_msg.hue = hue;
     color_msg.saturation = saturation;
     color_msg.brightness = brightness;
     color_msg.kelvin = kelvin;
     color_msg.duration_millis = 0;
 
-    lifx_lan_send_(fd, &power_msg, sizeof(power_msg));
     lifx_lan_send_(fd, &color_msg, sizeof(color_msg));
-    lifx_lan_close_socket_(fd);
 }

@@ -15,9 +15,7 @@ class PanelAction < Action
   end
 
   def finished
-    return unless @panel
-
-    @panel.close_window
+    @panel.close_window if @panel
     @panel = nil
   end
 end

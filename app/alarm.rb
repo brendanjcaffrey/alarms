@@ -12,7 +12,7 @@ class Alarm
   @@menu_time_formatter.dateFormat = 'h:mm a'
 
   def initialize(date)
-    unless date.is_a?(NSDate)
+    if !date.is_a?(NSDate)
       raise Exception.new('Invalid date in Alarm.initialize, must be an instance of NSDate')
     end
 
@@ -21,22 +21,17 @@ class Alarm
 
   def self.unserialize(date_string)
     date = @@serialization_formatter.dateFromString(date_string)
-
     return nil unless date
 
     result = NSDate.date.compare(date)
-    if result != NSOrderedAscending
-      return nil
-    end
+    return nil if result != NSOrderedAscending
 
     Alarm.new(date)
   end
 
   def self.from_time(time_string)
-    now = Time.at(NSDate.date)
-
     alarm = Time.at(NSDate.dateWithNaturalLanguageString(time_string))
-    alarm += 24*60*60 if alarm < now
+    alarm += 24*60*60 if alarm < Time.at(NSDate.date)
 
     Alarm.new(alarm)
   end
@@ -50,13 +45,15 @@ class Alarm
     self.date <=> other.date
   end
 
-  def to_menu_date
+  def to_menu_date # this is terrible and doesn't work on DST after 11pm when springing forward
     alarm_string = @@menu_date_formatter.stringFromDate(@date)
     today_string = @@menu_date_formatter.stringFromDate(NSDate.date)
     return 'Today' if alarm_string == today_string
 
-    tomorrow_string = @@menu_date_formatter.stringFromDate(NSDate.date.dateByAddingTimeInterval(60*60*24))
+    tomorrow = NSDate.date.dateByAddingTimeInterval(60*60*24)
+    tomorrow_string = @@menu_date_formatter.stringFromDate(tomorrow)
     return 'Tomorrow' if alarm_string == tomorrow_string
+
     alarm_string
   end
 

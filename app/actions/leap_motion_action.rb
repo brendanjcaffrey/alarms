@@ -2,6 +2,8 @@ class LeapMotionAction < Action
   @@silence_seconds = 15.0
 
   def started
+    finished if @socket || @unpause_timer
+
     url = NSURL.URLWithString('ws://127.0.0.1:6437')
     @socket = SRWebSocket.alloc.initWithURLRequest(NSURLRequest.requestWithURL(url))
     @socket.delegate = self
@@ -9,9 +11,13 @@ class LeapMotionAction < Action
   end
 
   def finished
-    @socket.close
+    @socket.close if @socket
     @unpause_timer.invalidate if @unpause_timer
-    @unpause_timer = nil
+    @unpause_timer = @socket = nil
+  end
+
+  def unpause_timer_fired(sender)
+    @delegate.unpause
   end
 
 
@@ -42,10 +48,5 @@ class LeapMotionAction < Action
   end
 
   def webSocket(webSocket, didCloseWithCode: code, reason: _)
-  end
-
-
-  def unpause_timer_fired(sender)
-    @delegate.unpause
   end
 end

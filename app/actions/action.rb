@@ -6,6 +6,9 @@ class Action
   def initialize
   end
 
+  def prestarted(seconds_until_start)
+  end
+
   def started
   end
 

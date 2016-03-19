@@ -17,7 +17,7 @@ class AlarmCollection
 
   def self.unserialize_from_defaults
     defaults = NSUserDefaults.standardUserDefaults
-    defaults.setObject('', forKey:@@key) if defaults.objectForKey(@@key) == nil
+    defaults.setObject('', forKey: @@key) if defaults.objectForKey(@@key) == nil
     unserialize(defaults.objectForKey(@@key))
   end
 
@@ -26,7 +26,7 @@ class AlarmCollection
   end
 
   def serialize_to_defaults
-    NSUserDefaults.standardUserDefaults.setObject(serialize, forKey:@@key)
+    NSUserDefaults.standardUserDefaults.setObject(serialize, forKey: @@key)
   end
 
   def first_alarm
@@ -73,6 +73,9 @@ class AlarmCollection
   end
 
   def snooze_alarm(alarm)
-    update_alarm(alarm, alarm.date.dateByAddingTimeInterval(@@snooze_interval))
+    remove_alarm(alarm)
+
+    # NOTE add_alarm can fail here if there's another alarm too close, but that's fine
+    add_alarm(Alarm.new(alarm.date.dateByAddingTimeInterval(@@snooze_interval)))
   end
 end
