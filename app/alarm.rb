@@ -45,16 +45,11 @@ class Alarm
     self.date <=> other.date
   end
 
-  def to_menu_date # this is terrible and doesn't work on DST after 11pm when springing forward
-    alarm_string = @@menu_date_formatter.stringFromDate(@date)
-    today_string = @@menu_date_formatter.stringFromDate(NSDate.date)
-    return 'Today' if alarm_string == today_string
+  def to_menu_date
+    return 'Today' if Date.today.is_same_day_as(@date)
+    return 'Tomorrow' if Date.tomorrow.is_same_day_as(@date)
 
-    tomorrow = NSDate.date.dateByAddingTimeInterval(60*60*24)
-    tomorrow_string = @@menu_date_formatter.stringFromDate(tomorrow)
-    return 'Tomorrow' if alarm_string == tomorrow_string
-
-    alarm_string
+    @@menu_date_formatter.stringFromDate(@date)
   end
 
   def to_menu_time
