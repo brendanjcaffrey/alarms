@@ -1,3 +1,7 @@
+class Date
+  attr_reader :date
+end
+
 describe Date do
   it 'should initialize to the right day' do
     ns_date = Date.new(2016, 1, 31).date

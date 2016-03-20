@@ -1,6 +1,4 @@
 class Date
-  attr_reader :date
-
   def initialize(year, month, day)
     comps = NSDateComponents.alloc.init
     comps.setYear(year)
