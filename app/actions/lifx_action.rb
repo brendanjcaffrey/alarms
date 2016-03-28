@@ -1,6 +1,6 @@
 class LifxAction < Action
   @@final_brightness = 26214
-  @@kelvins = 0
+  @@kelvins = 4500
 
   def prestarted(seconds_until_started)
     finished if @fd || @tick_timer
