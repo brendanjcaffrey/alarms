@@ -4,12 +4,22 @@ class AppDelegate
   def applicationDidFinishLaunching(notification)
     return true if RUBYMOTION_ENV == 'test'
 
-    @sounder = AlarmDriver.new(self, [LeapMotionAction.new, LifxAction.new, MaxTimeAction.new, PanelAction.new, SoundAction.new])
+    @driver = AlarmDriver.new(self, [LeapMotionAction.new, LifxAction.new, MaxTimeAction.new, PanelAction.new, SoundAction.new])
     @collection = AlarmCollection.unserialize_from_defaults
+
+    NSNotificationCenter.defaultCenter.addObserverForName(NSSystemTimeZoneDidChangeNotification,
+      object: nil, queue: nil, usingBlock: proc { |notif| self.time_zone_changed })
 
     build_menu
     alarms_changed
     set_midnight_timer
+  end
+
+  def time_zone_changed
+    # just unserialize again to get in the right timezone
+    # NOTE: this will drop alarms that are in the past in the new timezone
+    @collection = AlarmCollection.unserialize_from_defaults
+    alarms_changed
   end
 
   def add_alarm
@@ -98,7 +108,7 @@ class AppDelegate
 
   def alarms_changed
     @status_item.button.looksDisabled = @collection.first_alarm.nil?
-    @sounder.set_next_alarm(@collection.first_alarm)
+    @driver.set_next_alarm(@collection.first_alarm)
     @collection.serialize_to_defaults
     reset_menu
   end
