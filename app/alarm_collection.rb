@@ -1,7 +1,7 @@
 class AlarmCollection
-  @@key = 'alarms'
-  @@snooze_interval = 60.0*10.0 # seconds
-  @@exclusivity_window_range = 60.0*15.0 # seconds
+  ALARMS_KEY         = 'alarms'
+  SNOOZE_TIME        = 60.0*10.0 # seconds
+  EXCLUSIVITY_WINDOW = 60.0*15.0 # seconds
 
   attr_reader :alarms
 
@@ -17,8 +17,8 @@ class AlarmCollection
 
   def self.unserialize_from_defaults
     defaults = NSUserDefaults.standardUserDefaults
-    defaults.setObject('', forKey: @@key) if defaults.objectForKey(@@key) == nil
-    unserialize(defaults.objectForKey(@@key))
+    defaults.setObject('', forKey: ALARMS_KEY) if defaults.objectForKey(ALARMS_KEY) == nil
+    unserialize(defaults.objectForKey(ALARMS_KEY))
   end
 
   def serialize
@@ -26,7 +26,7 @@ class AlarmCollection
   end
 
   def serialize_to_defaults
-    NSUserDefaults.standardUserDefaults.setObject(serialize, forKey: @@key)
+    NSUserDefaults.standardUserDefaults.setObject(serialize, forKey: ALARMS_KEY)
   end
 
   def first_alarm
@@ -39,8 +39,8 @@ class AlarmCollection
     end
 
     # check to make sure there are no other alarms too close to this one
-    start_date = alarm.date.dateByAddingTimeInterval(-1.0 * @@exclusivity_window_range)
-    end_date = alarm.date.dateByAddingTimeInterval(@@exclusivity_window_range)
+    start_date = alarm.date.dateByAddingTimeInterval(-1.0 * EXCLUSIVITY_WINDOW)
+    end_date = alarm.date.dateByAddingTimeInterval(EXCLUSIVITY_WINDOW)
     return false if @alarms.any? { |a| a.date > start_date && a.date < end_date }
 
     @alarms << alarm
@@ -76,6 +76,6 @@ class AlarmCollection
     remove_alarm(alarm)
 
     # NOTE add_alarm can fail here if there's another alarm too close, but that's fine
-    add_alarm(Alarm.new(alarm.date.dateByAddingTimeInterval(@@snooze_interval)))
+    add_alarm(Alarm.new(alarm.date.dateByAddingTimeInterval(SNOOZE_TIME)))
   end
 end

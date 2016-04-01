@@ -1,6 +1,4 @@
 class LeapMotionAction < Action
-  @@silence_seconds = 15.0
-
   def started
     finished if @socket || @unpause_timer
 

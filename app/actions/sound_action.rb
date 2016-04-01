@@ -1,8 +1,8 @@
 class SoundAction < Action
-  @@default_output = 'Built-in Output'
-  @@max_volume = 1.0
-  @@start_volume = 0.30
-  @@increase_by = 0.025
+  DEFAULT_OUTPUT = 'Built-in Output'
+  MAX_VOLUME     = 1.0
+  START_VOLUME   = 0.30
+  INCREASE_BY    = 0.025
 
   def initialize
     error_ptr = Pointer.new(:object)
@@ -21,10 +21,10 @@ class SoundAction < Action
   def started
     @timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: 'update_volume', userInfo: nil, repeats: true)
     @old_output = getCurrentOutputDeviceName
-    setOutputDeviceByName(@@default_output)
+    setOutputDeviceByName(DEFAULT_OUTPUT)
 
     @old_volume = getOutputVolume
-    @current_volume = @@start_volume - @@increase_by
+    @current_volume = START_VOLUME - INCREASE_BY
     update_volume
 
     @player.play
@@ -49,11 +49,12 @@ class SoundAction < Action
 
 
   def update_volume
-    @current_volume = @current_volume + @@increase_by
-    if @current_volume >= @@max_volume
+    @current_volume = @current_volume + INCREASE_BY
+    if @current_volume >= MAX_VOLUME
       @current_volume = 1.0
       invalidate_timer
     end
+
     setOutputVolume(@current_volume)
   end
 

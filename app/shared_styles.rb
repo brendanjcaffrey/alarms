@@ -1,8 +1,8 @@
 module SharedStyles
-  @@font_size = 40.0
+  FONT_SIZE = 40.0
 
   def text_font
-    NSFont.fontWithName('Helvetica Neue Thin', size:@@font_size)
+    NSFont.fontWithName('Helvetica Neue Thin', size: FONT_SIZE)
   end
 
   def default_button_style

@@ -1,9 +1,9 @@
 class Time
-  @@tomorrow_offset = NSDateComponents.alloc.init.tap { |o| o.day = 1 }
+  TOMORROW_OFFSET = NSDateComponents.alloc.init.tap { |o| o.day = 1 }
 
   def self.tomorrow
-    Time.at(NSCalendar.currentCalendar.dateByAddingComponents(@@tomorrow_offset,
-                                                              toDate:NSDate.date, options:0))
+    Time.at(NSCalendar.currentCalendar.dateByAddingComponents(TOMORROW_OFFSET,
+      toDate: NSDate.date, options: 0))
   end
 
   def same_day?(other)

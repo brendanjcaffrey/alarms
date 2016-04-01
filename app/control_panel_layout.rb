@@ -1,18 +1,18 @@
 class ControlPanelLayout < MotionKit::WindowLayout
   include SharedStyles
 
-  @@width = 300.0
-  @@text_height = 75.0
-  @@button_height = 45.0
-  @@edge_spacing = 8.0
-  @@height = @@text_height + @@button_height + @@edge_spacing*3.0
-  @@button_width = (@@width - @@edge_spacing*3.0) / 2.0
+  WIDTH         = 300.0
+  TEXT_HEIGHT   = 75.0
+  BUTTON_HEIGHT = 45.0
+  EDGE_SPACING  = 8.0
+  HEIGHT        = TEXT_HEIGHT + BUTTON_HEIGHT + EDGE_SPACING*3.0
+  BUTTON_WIDTH  = (WIDTH - EDGE_SPACING*3.0) / 2.0
 
   view :time_field
   view :snooze, :stop
 
   def layout
-    frame [[0, 0], [@@width, @@height]]
+    frame [[0, 0], [WIDTH, HEIGHT]]
     styleMask NSBorderlessWindowMask
     level NSPopUpMenuWindowLevel
 
@@ -31,8 +31,8 @@ class ControlPanelLayout < MotionKit::WindowLayout
 
     constraints do
       center_x.equals(:superview)
-      top.equals(:superview).plus(@@edge_spacing)
-      height @@text_height
+      top.equals(:superview).plus(EDGE_SPACING)
+      height TEXT_HEIGHT
     end
   end
 
@@ -41,7 +41,7 @@ class ControlPanelLayout < MotionKit::WindowLayout
     button_style
 
     constraints do
-      right.equals(:superview).minus(@@edge_spacing)
+      right.equals(:superview).minus(EDGE_SPACING)
     end
   end
 
@@ -50,7 +50,7 @@ class ControlPanelLayout < MotionKit::WindowLayout
     button_style
 
     constraints do
-      left.equals(:superview).plus(@@edge_spacing)
+      left.equals(:superview).plus(EDGE_SPACING)
     end
   end
 
@@ -60,9 +60,9 @@ class ControlPanelLayout < MotionKit::WindowLayout
     default_button_style
 
     constraints do
-      width @@button_width
-      height @@button_height
-      bottom.equals(:superview).minus(@@edge_spacing)
+      width BUTTON_WIDTH
+      height BUTTON_HEIGHT
+      bottom.equals(:superview).minus(EDGE_SPACING)
     end
   end
 end
