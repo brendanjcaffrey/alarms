@@ -9,17 +9,12 @@ class AppDelegate
 
     NSNotificationCenter.defaultCenter.addObserverForName(NSSystemTimeZoneDidChangeNotification,
       object: nil, queue: nil, usingBlock: proc { |notif| self.time_zone_changed })
+    NSWorkspace.sharedWorkspace.notificationCenter.addObserverForName(NSWorkspaceDidWakeNotification,
+      object: nil, queue: nil, usingBlock: proc { |notif| self.woke_up })
 
     build_menu
     alarms_changed
     set_midnight_timer
-  end
-
-  def time_zone_changed
-    # just unserialize again to get in the right timezone
-    # NOTE: this will drop alarms that are in the past in the new timezone
-    @collection = AlarmCollection.unserialize_from_defaults
-    alarms_changed
   end
 
   def add_alarm
@@ -66,6 +61,19 @@ class AppDelegate
 
   def midnight_timer_fired(sender)
     reset_menu
+    set_midnight_timer
+  end
+
+  def time_zone_changed
+    # just unserialize again to get in the right timezone
+    # NOTE: this will drop alarms that are in the past in the new timezone
+    @collection = AlarmCollection.unserialize_from_defaults
+    alarms_changed
+    set_midnight_timer
+  end
+
+  def woke_up
+    alarms_changed
     set_midnight_timer
   end
 
