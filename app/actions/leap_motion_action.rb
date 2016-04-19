@@ -1,4 +1,6 @@
 class LeapMotionAction < Action
+  SILENCE_SECONDS = 15.0
+
   def started
     finished if @socket || @unpause_timer
 
@@ -37,7 +39,7 @@ class LeapMotionAction < Action
       return if parsed['gestures'].nil? or parsed['gestures'].empty?
       @delegate.pause
       return if @unpause_timer
-      @unpause_timer = NSTimer.scheduledTimerWithTimeInterval(@@silence_seconds, target: self, selector: 'unpause_timer_fired:',
+      @unpause_timer = NSTimer.scheduledTimerWithTimeInterval(SILENCE_SECONDS, target: self, selector: 'unpause_timer_fired:',
                                                               userInfo: nil, repeats: false)
     end
   end
