@@ -18,7 +18,7 @@ class AlarmDriver
     alarm_seconds = alarm.date.timeIntervalSinceDate(NSDate.date)
     @alarm_timer = NSTimer.scheduledTimerWithTimeInterval(alarm_seconds, target: self,
       selector: 'start_timer_fired:', userInfo: nil, repeats: false)
-    prealarm_seconds = [alarm_seconds - 15*60, 0].max
+    prealarm_seconds = [alarm_seconds - 15*60, 0].max # TODO use EXCLUSIVITY_WINDOW
     @prealarm_timer = NSTimer.scheduledTimerWithTimeInterval(prealarm_seconds, target: self,
       selector: 'prestart_timer_fired:', userInfo: nil, repeats: false)
   end
