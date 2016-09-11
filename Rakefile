@@ -25,8 +25,6 @@ Motion::Project::App.setup do |app|
   app.frameworks << 'CoreAudio'
 
   app.vendor_project('vendor/lifx', :static)
-  app.vendor_project('vendor/switchaudio', :static)
-  app.vendor_project('vendor/switchvolume', :static)
 
   app.pods do
     pod 'SocketRocket', '= 0.3.1-beta2'
@@ -56,4 +54,6 @@ task :release do
   system("rm -r '#{release_path}'") if File.exists?(release_path)
   system("cp -r '#{built_path}' '#{release_path}'")
   system("open '#{release_path}'")
+
+  puts 'Remember to remove and re-add the app file to Security & Privacy -> Privacy -> Accessibility'
 end

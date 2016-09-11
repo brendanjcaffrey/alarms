@@ -80,7 +80,7 @@ void lifx_lan_send_(int fd, void* msg, size_t msg_size)
     sendto(fd, msg, msg_size, 0, (struct sockaddr*) &addr, sizeof(struct sockaddr_in));
 }
 
-void lifx_lan_encode_header_(struct lifx_lan_header* header, char type, size_t msg_size, uint16_t seqnum)
+void lifx_lan_encode_header_(struct lifx_lan_header* header, char type, size_t msg_size, uint16_t seqnum, uint64_t target)
 {
     memset(header, 0, sizeof(struct lifx_lan_header));
     assert(msg_size < UINT16_MAX);
@@ -88,39 +88,40 @@ void lifx_lan_encode_header_(struct lifx_lan_header* header, char type, size_t m
     header->size = msg_size;
     header->protocol = LIFX_LAN_PROTOCOL;
     header->addressable = 1;
-    header->tagged = 1;
+    header->tagged = 0;
+    header->target = target;
     header->type = type;
     header->res_required = 1;
 }
 
-void lifx_lan_lights_off(int fd, uint16_t seqnum)
+void lifx_lan_lights_off(int fd, uint16_t seqnum, uint64_t target)
 {
     if (fd == -1) { return; }
 
     struct lifx_lan_device_set_power msg;
-    lifx_lan_encode_header_(&msg.header, LIFX_LAN_MESSAGE_TYPE_DEVICE_SET_POWER, sizeof(msg), seqnum);
+    lifx_lan_encode_header_(&msg.header, LIFX_LAN_MESSAGE_TYPE_DEVICE_SET_POWER, sizeof(msg), seqnum, target);
     msg.level = LIFX_LAN_LEVEL_POWERED_OFF;
 
     lifx_lan_send_(fd, &msg, sizeof(msg));
 }
 
-void lifx_lan_lights_on(int fd, uint16_t seqnum)
+void lifx_lan_lights_on(int fd, uint16_t seqnum, uint64_t target)
 {
     if (fd == -1) { return; }
 
     struct lifx_lan_device_set_power msg;
-    lifx_lan_encode_header_(&msg.header, LIFX_LAN_MESSAGE_TYPE_DEVICE_SET_POWER, sizeof(msg), seqnum);
+    lifx_lan_encode_header_(&msg.header, LIFX_LAN_MESSAGE_TYPE_DEVICE_SET_POWER, sizeof(msg), seqnum, target);
     msg.level = LIFX_LAN_LEVEL_POWERED_ON;
 
     lifx_lan_send_(fd, &msg, sizeof(msg));
 }
 
-void lifx_lan_set_color(int fd, uint16_t seqnum, uint16_t hue, uint16_t saturation, uint16_t brightness, uint16_t kelvin, uint32_t duration_millis)
+void lifx_lan_set_color(int fd, uint16_t seqnum, uint64_t target, uint16_t hue, uint16_t saturation, uint16_t brightness, uint16_t kelvin, uint32_t duration_millis)
 {
     if (fd == -1) { return; }
 
     struct lifx_lan_light_set_color color_msg;
-    lifx_lan_encode_header_(&color_msg.header, LIFX_LAN_MESSAGE_TYPE_LIGHT_SET_COLOR, sizeof(color_msg), seqnum);
+    lifx_lan_encode_header_(&color_msg.header, LIFX_LAN_MESSAGE_TYPE_LIGHT_SET_COLOR, sizeof(color_msg), seqnum, target);
     color_msg.hue = hue;
     color_msg.saturation = saturation;
     color_msg.brightness = brightness;
