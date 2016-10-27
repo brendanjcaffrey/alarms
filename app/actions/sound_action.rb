@@ -1,8 +1,9 @@
 class SoundAction < Action
-  DEFAULT_OUTPUT = 'iHome iW1 E5A5C9'
+  DEFAULT_OUTPUT = 'Bedroom'
   MAX_VOLUME     = 100
   START_VOLUME   = 10
   INCREASE_BY    = 1
+  CHANGE_BUFFER  = 20
 
   GET_OUTPUT = <<-SCRIPT
     tell application "System Preferences"
@@ -60,14 +61,22 @@ class SoundAction < Action
     super
   end
 
-  def started
-    @old_output = `osascript -e '#{GET_OUTPUT}' 2>&1`.chomp
-    `osascript -e '#{CHANGE_OUTPUT % DEFAULT_OUTPUT}'`
+  def prestarted(seconds_until_started)
+    finished if @change_output_timer
 
+    if seconds_until_started < CHANGE_BUFFER
+      change_output
+    else
+      @change_output_timer = NSTimer.scheduledTimerWithTimeInterval(seconds_until_started - CHANGE_BUFFER, target: self,
+                                                                    selector: 'change_output', userInfo: nil, repeats: false)
+    end
+  end
+
+  def started
     @old_volume = `osascript -e '#{GET_VOLUME}'`.to_i
     @current_volume = START_VOLUME - INCREASE_BY
     update_volume
-    @timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: 'update_volume', userInfo: nil, repeats: true)
+    @update_volume_timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: 'update_volume', userInfo: nil, repeats: true)
 
     @player.play
   end
@@ -102,8 +111,16 @@ class SoundAction < Action
 
   private
 
+  def change_output
+    @old_output = `osascript -e '#{GET_OUTPUT}' 2>&1`.chomp
+    `osascript -e '#{CHANGE_OUTPUT % DEFAULT_OUTPUT}'`
+
+    @change_output_timer = nil
+  end
+
   def invalidate_timer
-    @timer.invalidate if @timer
-    @timer = nil
+    @update_volume_timer.invalidate if @update_volume_timer
+    @change_output_timer.invalidate if @change_output_timer
+    @update_volume_timer = @change_output_timer = nil
   end
 end
