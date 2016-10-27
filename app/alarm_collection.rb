@@ -1,7 +1,7 @@
 class AlarmCollection
   ALARMS_KEY         = 'alarms'
   SNOOZE_TIME        = 60.0*10.0 # seconds
-  EXCLUSIVITY_WINDOW = 60.0*15.0 # seconds
+  EXCLUSIVITY_WINDOW = 60.0*5.0  # seconds
 
   attr_reader :alarms
 

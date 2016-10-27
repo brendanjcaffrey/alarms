@@ -22,12 +22,14 @@ class LeapMotionAction < Action
 
 
   def webSocketDidOpen(webSocket)
+    return unless @socket
+
     data = '{"enableGestures":true}'
     @socket.send(data)
   end
 
   def webSocket(webSocket, didReceiveMessage: message)
-    return unless @delegate
+    return unless @socket
 
     error_ptr = Pointer.new(:object)
     parsed = BW::JSON.parse(message.description)

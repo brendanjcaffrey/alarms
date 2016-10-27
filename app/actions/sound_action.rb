@@ -1,9 +1,9 @@
 class SoundAction < Action
-  DEFAULT_OUTPUT = 'Bedroom'
-  MAX_VOLUME     = 100
-  START_VOLUME   = 10
-  INCREASE_BY    = 1
-  CHANGE_BUFFER  = 20
+  OUTPUT_DEVICE = 'Bedroom'
+  MAX_VOLUME    = 100
+  START_VOLUME  = 10
+  INCREASE_BY   = 1
+  CHANGE_BUFFER = 20
 
   GET_OUTPUT = <<-SCRIPT
     tell application "System Preferences"
@@ -113,7 +113,7 @@ class SoundAction < Action
 
   def change_output
     @old_output = `osascript -e '#{GET_OUTPUT}' 2>&1`.chomp
-    `osascript -e '#{CHANGE_OUTPUT % DEFAULT_OUTPUT}'`
+    `osascript -e '#{CHANGE_OUTPUT % OUTPUT_DEVICE}'`
 
     @change_output_timer = nil
   end
