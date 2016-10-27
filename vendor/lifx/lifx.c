@@ -1,10 +1,4 @@
-#include <arpa/inet.h>
-#include <assert.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
+#include "lifx.h"
 
 #define LIFX_LAN_PORT              56700
 #define LIFX_LAN_PROTOCOL          1024
