@@ -7,41 +7,56 @@ class SoundAction < Action
 
   GET_OUTPUT = <<-SCRIPT
     tell application "System Preferences"
-        reveal pane id "com.apple.preference.sound"
+      activate
+      set current pane to pane "com.apple.preference.sound"
     end tell
 
     tell application "System Events"
-        tell application process "System Preferences"
-            delay 0.75
-            tell tab group 1 of window "Sound"
-                click radio button "Output"
-                tell table 1 of scroll area 1
-                    set selectedRow to (first UI element whose selected is true)
-                    set currentOutput to value of text field 1 of selectedRow as text
-                    log currentOutput
-                end tell
-            end tell
+      tell application process "System Preferences"
+        repeat until exists tab group 1 of window "Sound"
+        end repeat
+
+        tell tab group 1 of window "Sound"
+          click radio button "Output"
+
+          tell table 1 of scroll area 1
+            set selectedRow to (first UI element whose selected is true)
+            set currentOutput to value of text field 1 of selectedRow as text
+            log currentOutput
+          end tell
         end tell
+      end tell
     end tell
 
     if application "System Preferences" is running then
-        tell application "System Preferences" to quit
+      tell application "System Preferences" to quit
     end if
   SCRIPT
 
+  # this script changes to the built in output first (row 1), then to whatever's selected in case something goes wrong
   CHANGE_OUTPUT = <<-SCRIPT
     tell application "System Preferences"
-        reveal anchor "output" of pane id "com.apple.preference.sound"
-        activate
-        tell application "System Events"
-            tell process "System Preferences"
-                delay 0.75
-                click radio button "Output" of tab group 1 of window "Sound"
-                select (row 1 of table 1 of scroll area 1 of tab group 1 of window "Sound" whose value of text field 1 is "%s")
-            end tell
-        end tell
+      activate
+      set current pane to pane "com.apple.preference.sound"
     end tell
-    tell application "System Preferences" to quit
+
+    tell application "System Events"
+      tell application process "System Preferences"
+        repeat until exists tab group 1 of window "Sound"
+        end repeat
+        delay 0.75
+
+        tell tab group 1 of window "Sound"
+          click radio button "Output"
+          select row 1 of table 1 of scroll area 1
+          select (row 1 of table 1 of scroll area 1 whose value of text field 1 is "%s")
+        end tell
+      end tell
+    end tell
+
+    if application "System Preferences" is running then
+      tell application "System Preferences" to quit
+    end if
   SCRIPT
 
   GET_VOLUME = 'output volume of (get volume settings)'
