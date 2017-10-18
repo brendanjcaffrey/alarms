@@ -49,6 +49,7 @@ class SoundAction < Action
         tell tab group 1 of window "Sound"
           click radio button "Output"
           select row 1 of table 1 of scroll area 1
+          delay 0.75
           select (row 1 of table 1 of scroll area 1 whose value of text field 1 is "%s")
         end tell
       end tell
