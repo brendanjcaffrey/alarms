@@ -16,11 +16,11 @@ class AlarmDriver
     return unless alarm
 
     alarm_seconds = alarm.date.timeIntervalSinceDate(NSDate.date)
-    @alarm_timer = NSTimer.scheduledTimerWithTimeInterval(alarm_seconds, target: self,
-      selector: 'start_timer_fired:', userInfo: nil, repeats: false)
     prealarm_seconds = [alarm_seconds - AlarmCollection::EXCLUSIVITY_WINDOW, 0].max
     @prealarm_timer = NSTimer.scheduledTimerWithTimeInterval(prealarm_seconds, target: self,
       selector: 'prestart_timer_fired:', userInfo: nil, repeats: false)
+    @alarm_timer = NSTimer.scheduledTimerWithTimeInterval(alarm_seconds, target: self,
+      selector: 'start_timer_fired:', userInfo: nil, repeats: false)
   end
 
   def prestart_timer_fired(timer)

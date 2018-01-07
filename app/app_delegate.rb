@@ -4,7 +4,7 @@ class AppDelegate
   def applicationDidFinishLaunching(notification)
     return true if RUBYMOTION_ENV == 'test'
 
-    @driver = AlarmDriver.new(self, Action.actions.map(&:new))
+    @driver = AlarmDriver.new(self, (Action.actions-[LifxAction]).map(&:new))
     @collection = AlarmCollection.unserialize_from_defaults
 
     NSNotificationCenter.defaultCenter.addObserverForName(NSSystemTimeZoneDidChangeNotification,
